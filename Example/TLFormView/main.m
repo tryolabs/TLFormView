@@ -2,17 +2,15 @@
 //  main.m
 //  TLFormView
 //
-//  Created by BrunoBerisso on 02/20/2015.
-//  Copyright (c) 2014 BrunoBerisso. All rights reserved.
+//  Created by Bruno Berisso on 2/23/15.
+//  Copyright (c) 2015 Bruno Berisso. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
-#import "TLAppDelegate.h"
-
-int main(int argc, char * argv[])
-{
+int main(int argc, char * argv[]) {
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([TLAppDelegate class]));
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }
