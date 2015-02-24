@@ -12,11 +12,13 @@
 
 
 
-@interface TLFormModelAdapter : NSObject <TLFormViewDataSource>
+@interface TLFormModel : NSObject <TLFormViewDataSource>
 
 @end
 
-@implementation TLFormModelAdapter
+@implementation TLFormModel {
+    NSArray *allProperties;
+}
 
 #pragma mark - TLFormViewDataSource
 
@@ -28,30 +30,77 @@
     
     for (int i = 0; i < count; i++ ) {
         objc_property_t property = properties[i];
-        const char* propertyName = property_getName(property);
+        const char *propertyName = property_getName(property);
+        const char *attr = property_getAttributes(property);
         
         [properies addObject:[NSString stringWithCString:propertyName encoding:NSUTF8StringEncoding]];
     }
     
     free(properties);
     
-    return properies;
+    allProperties = properies;
+    
+    return allProperties;
 }
 
 - (TLFormField *)formView:(TLFormView *)form fieldForName:(NSString *)fieldName {
-    
+    return nil;
 }
 
 @end
+
+
+/*
+ TLFormText
+ TLFormLongText
+ TLFormNumber
+ TLFormEnumerated
+ TLFormImage
+ TLFormList
+ - TLFormDate
+ TLFormTitle
+*/
+
+
+
+@interface UserModel : TLFormModel
+
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSNumber *age;
+@property (nonatomic, strong) NSString *_description;
+
+@end
+
+@implementation UserModel
+
+@end
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 @interface ViewController () <TLFormViewDelegate, TLFormViewDataSource>
-
+@property (weak, nonatomic) IBOutlet TLFormView *form;
 @end
 
-@implementation ViewController
+@implementation ViewController {
+    UserModel *user;
+}
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+//    user = [[UserModel alloc] init];
+    self.form.formDataSource = self;
+}
 
 - (NSArray *)fieldNamesToShowInFormView:(TLFormView *)form {
     return @[@"field0", @"field1", @"field2", @"field3", @"field4"];

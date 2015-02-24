@@ -23,7 +23,6 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="editingNew" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="formDataSource" destination="BYZ-38-t0r" id="pDz-sw-FMU"/>
                                     <outlet property="formDelegate" destination="BYZ-38-t0r" id="j8U-Mp-Bph"/>
                                 </connections>
                             </view>
@@ -36,6 +35,9 @@
                             <constraint firstAttribute="trailing" secondItem="bqS-m3-CVw" secondAttribute="trailing" id="m4R-fU-lpn"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="form" destination="bqS-m3-CVw" id="jH4-4w-2nC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
