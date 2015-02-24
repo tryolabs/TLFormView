@@ -8,52 +8,15 @@
 
 #import "ViewController.h"
 #import "TLFormView.h"
-#import <objc/runtime.h>
+#import "TLFormModel.h"
 
-
-
-@interface TLFormModel : NSObject <TLFormViewDataSource>
-
-@end
-
-@implementation TLFormModel {
-    NSArray *allProperties;
-}
-
-#pragma mark - TLFormViewDataSource
-
-- (NSArray *)fieldNamesToShowInFormView:(TLFormView *)form {
-    
-    unsigned int count = 0;
-    objc_property_t *properties = class_copyPropertyList( [self class], &count );
-    NSMutableArray *properies = [NSMutableArray arrayWithCapacity:count];
-    
-    for (int i = 0; i < count; i++ ) {
-        objc_property_t property = properties[i];
-        const char *propertyName = property_getName(property);
-        const char *attr = property_getAttributes(property);
-        
-        [properies addObject:[NSString stringWithCString:propertyName encoding:NSUTF8StringEncoding]];
-    }
-    
-    free(properties);
-    
-    allProperties = properies;
-    
-    return allProperties;
-}
-
-- (TLFormField *)formView:(TLFormView *)form fieldForName:(NSString *)fieldName {
-    return nil;
-}
-
-@end
 
 
 /*
  TLFormText
  TLFormLongText
  TLFormNumber
+ TLFormBoolean
  TLFormEnumerated
  TLFormImage
  TLFormList
@@ -63,11 +26,18 @@
 
 
 
+
+
+
 @interface UserModel : TLFormModel
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSNumber *age;
-@property (nonatomic, strong) NSString *_description;
+@property (nonatomic, strong) TLFormTitle *user_info;
+@property (nonatomic, strong) TLFormImage *avatar;
+@property (nonatomic, strong) TLFormText *name;
+@property (nonatomic, strong) TLFormNumber *age;
+@property (nonatomic, strong) TLFormLongText *_description;
+@property (nonatomic, strong) TLFormEnumerated *hobbies;
+@property (nonatomic, strong) TLFormList *friends;
 
 @end
 
@@ -88,7 +58,7 @@
 
 
 
-@interface ViewController () <TLFormViewDelegate, TLFormViewDataSource>
+@interface ViewController () <TLFormViewDelegate>
 @property (weak, nonatomic) IBOutlet TLFormView *form;
 @end
 
@@ -98,73 +68,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    user = [[UserModel alloc] init];
-    self.form.formDataSource = self;
-}
-
-- (NSArray *)fieldNamesToShowInFormView:(TLFormView *)form {
-    return @[@"field0", @"field1", @"field2", @"field3", @"field4"];
-}
-
-- (NSArray *)constraintsFormatForFieldsInForm:(TLFormView *)form {
-    return @[@"V:|-[field0]",
-             @"|-[field0]-|",
-             
-             @"V:[field0]-[field1]",
-             @"|-[field1]-|",
-             
-             @"V:[field1]-[field2]",
-             @"|-[field2]-|",
-             
-             @"V:[field2]-[field3]",
-             @"|-[field3]-|",
-             
-             @"V:[field3]-[field4]-|",
-             @"|-[field4]-|"];
-}
-
-- (TLFormField *)formView:(TLFormView *)form fieldForName:(NSString *)fieldName {
+    user = [[UserModel alloc] init];
     
-    TLFormFieldType fieldType;
-    id defaultValue;
-    NSString *title;
+    user.name = (TLFormText *) @"Some Long Name";
+    user.age = (TLFormNumber *) @42;
+    user._description = (TLFormLongText *) @"It is possible to subclass NSString (and NSMutableString), but doing so requires providing storage facilities for the string (which is not inherited by subclasses) and implementing two primitive methods. The abstract NSString and NSMutableString classes are the public interface of a class cluster consisting mostly of private, concrete classes that create and return a string object appropriate for a given situation. Making your own concrete subclass of this cluster imposes certain requirements (discussed in “Methods to Override”).";
+    user.friends = (TLFormList *) @[@"friend 0", @"friend 1", @"friend 2", @"friend 3", @"friend 4"];
+    user.hobbies = (TLFormEnumerated *) @{TLFormEnumeratedSelectedValue: @"Current one", TLFormEnumeratedAllValues : @{@"other 1": @2, @"other 2": @3}};
     
-    if ([fieldName isEqualToString:@"field0"]) {
-        fieldType = TLFormFieldTypeSingleLine;
-        defaultValue = @"first value";
-        title = @"First";
-        
-    } else if ([fieldName isEqualToString:@"field1"]) {
-        fieldType = TLFormFieldTypeMultiLine;
-        defaultValue = @"second value second valuesecond valuesecond valuesecond valuesecond value";
-        title = @"Second";
-        
-    } else if ([fieldName isEqualToString:@"field2"]) {
-        fieldType = TLFormFieldTypeList;
-        defaultValue = @[@"value 1", @"value 2", @"value 3", @"value 4", @"value 5", @"value 6"];
-        title = @"Third";
-        
-    } else if ([fieldName isEqualToString:@"field3"]) {
-        fieldType = TLFormFieldTypeTitle;
-        defaultValue = @"four value";
-        title = @"Fourth";
-        
-    } else {
-        fieldType = TLFormFieldTypeList;
-        defaultValue = @[@"value 1", @"value 2", @"value 3", @"value 4", @"value 5", @"value 6"];
-        title = @"Fifth";
-    }
-    
-    return [TLFormField formFieldWithType:fieldType name:fieldName title:title andDefaultValue:defaultValue];
-}
-
-
-- (void)formView:(TLFormView *)form didSelecteField:(TLFormField *)field {
-    
-}
-
-- (void)formView:(TLFormView *)form didChangeValueForField:(TLFormField *)field newValue:(id)value {
-    
+    self.form.formDataSource = user;
 }
 
 @end

@@ -21,6 +21,7 @@
 		9BECE1C11A9CBB8B00CE2FD5 /* TLFormFieldTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C01A9CBB8B00CE2FD5 /* TLFormFieldTitle.m */; };
 		9BECE1C41A9CBBD100CE2FD5 /* TLFormFieldImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C31A9CBBD100CE2FD5 /* TLFormFieldImage.m */; };
 		9BECE1C71A9CBC7D00CE2FD5 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C61A9CBC7D00CE2FD5 /* UIView+Glow.m */; };
+		9BECE1CA1A9CC4FE00CE2FD5 /* TLFormModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C91A9CC4FE00CE2FD5 /* TLFormModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,8 @@
 		9BECE1C31A9CBBD100CE2FD5 /* TLFormFieldImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLFormFieldImage.m; sourceTree = "<group>"; };
 		9BECE1C51A9CBC7D00CE2FD5 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
 		9BECE1C61A9CBC7D00CE2FD5 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
+		9BECE1C81A9CC4FE00CE2FD5 /* TLFormModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLFormModel.h; sourceTree = "<group>"; };
+		9BECE1C91A9CC4FE00CE2FD5 /* TLFormModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLFormModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,8 @@
 				9BECE1B11A9CACEA00CE2FD5 /* Form Fields */,
 				9BECE1AD1A9B5B9800CE2FD5 /* TLFormView.h */,
 				9BECE1AE1A9B5B9800CE2FD5 /* TLFormView.m */,
+				9BECE1C81A9CC4FE00CE2FD5 /* TLFormModel.h */,
+				9BECE1C91A9CC4FE00CE2FD5 /* TLFormModel.m */,
 			);
 			name = Classes;
 			path = ../../Pod/Classes;
@@ -217,6 +222,7 @@
 				9BECE1BE1A9CBAEC00CE2FD5 /* TLFormFieldSingleLine.m in Sources */,
 				9BECE1881A9B5B4D00CE2FD5 /* main.m in Sources */,
 				9BECE1C11A9CBB8B00CE2FD5 /* TLFormFieldTitle.m in Sources */,
+				9BECE1CA1A9CC4FE00CE2FD5 /* TLFormModel.m in Sources */,
 				9BECE1B41A9CAD7800CE2FD5 /* TLFormField.m in Sources */,
 				9BECE1BB1A9CBA3F00CE2FD5 /* TLFormFieldMultiLine.m in Sources */,
 			);
