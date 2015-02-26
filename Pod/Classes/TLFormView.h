@@ -95,8 +95,8 @@
 
 @interface TLFormView : UIScrollView
 
-//This is the default padding used in the format strings of that define the layout. If changed after the layout was applied has no efect.
-@property (nonatomic, assign) CGFloat padding;
+//This is the default margin used in the format strings of that define the layout. If changed after the layout was applied has no efect.
+@property (nonatomic, assign) CGFloat margin;
 
 //Set the editing state on all the fields.
 @property (nonatomic, assign) BOOL editing;

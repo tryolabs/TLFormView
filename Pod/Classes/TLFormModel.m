@@ -266,20 +266,20 @@ typedef enum {
         NSString *verticalConsFormat;
         
         if ([propertiesIndex firstObject] == propertyName)
-            verticalConsFormat = @"V:|-padding-[%@]";
+            verticalConsFormat = @"V:|-margin -[%@]";
         
         else {
             
             NSString *previousProperty = propertiesIndex[i - 1];
             
             if ([propertiesIndex lastObject] == propertyName)
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-padding-[%%@]-padding-|", previousProperty];
+                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-margin -[%%@]-margin -|", previousProperty];
             else
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-padding-[%%@]", previousProperty];
+                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-margin -[%%@]", previousProperty];
         }
         
         [constraints addObject:[NSString stringWithFormat:verticalConsFormat, propertyName]];
-        [constraints addObject:[NSString stringWithFormat:@"|-padding-[%@]-padding-|", propertyName]];
+        [constraints addObject:[NSString stringWithFormat:@"|-margin -[%@]-margin -|", propertyName]];
     }
     
     return constraints;

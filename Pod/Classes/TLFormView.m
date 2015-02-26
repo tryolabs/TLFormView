@@ -60,8 +60,8 @@
     containerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:containerView];
 
-    //The default padding is 20.0 this value looks better on iPhone
-    self.padding = 8.0;
+    //The default margin is 20.0 this value looks better on iPhone
+    self.margin = 8.0;
     
 #ifdef TLFormViewLayoutDebug
     self.backgroundColor = [UIColor redColor];
@@ -187,27 +187,27 @@
         subView.translatesAutoresizingMaskIntoConstraints = NO;
         [views setObject:subView forKey:key];
         
-        [vConstraints appendFormat:@"padding-[%@]-", key];
+        [vConstraints appendFormat:@"margin-[%@]-", key];
         [hConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[subView(==auxView)]|"
                                                                                   options:0
                                                                                   metrics:nil
                                                                                     views:NSDictionaryOfVariableBindings(subView, auxView)]];
     }
     
-    [vConstraints appendString:@"padding-|"];
+    [vConstraints appendString:@"margin-|"];
     
     //Add the vertical and horizontal constraints
     [auxView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:vConstraints
                                                                     options:0
-                                                                    metrics:@{@"padding": @(self.padding)}
+                                                                    metrics:@{@"margin": @(self.margin)}
                                                                       views:views]];
     [auxView addConstraints:hConstraints];
 }
 
 - (void)setupLayoutWithConstraints:(NSArray *)constraintFomats {
     
-    //This make the padding available in the rules
-    NSDictionary *defaultMetrics = @{@"padding": @(self.padding)};
+    //This make the margin available in the rules
+    NSDictionary *defaultMetrics = @{@"margin": @(self.margin)};
     
     for (NSString *formatString in constraintFomats) {
         

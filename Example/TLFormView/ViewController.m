@@ -90,8 +90,8 @@
     
     self.form.formDataSource = user;
     self.form.formDelegate = user;
-//    self.form.padding = 0.0;
-//    
+    self.form.margin = 0.0;
+//
 //    [[TLFormView appearance] setBackgroundColor:[UIColor blueColor]];
 //    [[TLFormField appearance] setBackgroundColor:[UIColor redColor]];
 //    [[TLFormFieldList appearance] setBackgroundColor:[UIColor greenColor]];
