@@ -10,7 +10,7 @@
 #import "TLFormView.h"
 
 
-#define Test setter=SomeExValue:
+@interface TLFormSeparator : NSObject @end
 
 
 @interface TLFormText : NSString @end
@@ -34,6 +34,7 @@ extern NSString * const TLFormEnumeratedAllValues;
 
 
 @interface TLFormDate : NSDate @end
+
 
 
 @interface TLFormModel : NSObject <TLFormViewDataSource, TLFormViewDelegate>

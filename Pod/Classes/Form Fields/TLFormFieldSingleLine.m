@@ -254,7 +254,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
-    NSString *newValue = nil;
+    id newValue = nil;
     if (string.length > 0)
         if (self.inputType == TLFormFieldInputTypeNumeric) {
             
@@ -271,8 +271,11 @@
                     //If the value is NOT in the range left it unchanged
                     if (value < self.minValue || value > self.maxValue)
                         return NO;
-                } else
-                    newValue = [textField.text stringByAppendingString:string];
+                } else {
+                    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+                    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+                    newValue = [formatter numberFromString:[textField.text stringByAppendingString:string]];
+                }
             } else
                 return NO;
             

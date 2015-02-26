@@ -86,28 +86,29 @@
 #pragma mark - TLFormFieldDelegate
 
 - (void)didSelectField:(TLFormField *)field {
-    if (self.formDelegate)
+    if ([self.formDelegate respondsToSelector:@selector(formView:didSelecteField:)])
         [self.formDelegate formView:self didSelecteField:field];
 }
 
 - (void)listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.formDelegate)
+    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:didDeleteRowAtIndexPath:)])
         [self.formDelegate formView:self listTypeField:field didDeleteRowAtIndexPath:indexPath];
 }
 
 - (BOOL)listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.formDataSource respondsToSelector:@selector(formView:listTypeField:canMoveRowAtIndexPath:)])
+    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:canMoveRowAtIndexPath:)])
         return [self.formDelegate formView:self listTypeField:field canMoveRowAtIndexPath:indexPath];
     else
         return NO;
 }
 
 - (void)listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    [self.formDelegate formView:self listTypeField:field moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:moveRowAtIndexPath:toIndexPath:)])
+        [self.formDelegate formView:self listTypeField:field moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 - (void)didChangeValueForField:(TLFormField *)field newValue:(id)value {
-    if (self.formDelegate)
+    if ([self.formDelegate respondsToSelector:@selector(formView:didChangeValueForField:newValue:)])
         [self.formDelegate formView:self didChangeValueForField:field newValue:value];
     
     [self updateFieldsVisibility];

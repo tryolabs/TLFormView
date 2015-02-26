@@ -18,7 +18,7 @@
 //This delegate is fired when the user interact with any of the fields.
 
 @class TLFormView;
-@protocol TLFormViewDelegate
+@protocol TLFormViewDelegate <NSObject>
 
 @optional
 
