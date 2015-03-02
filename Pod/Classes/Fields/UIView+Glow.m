@@ -10,15 +10,15 @@
 
 @implementation UIView (Glow)
 
-- (void)setShowGlow:(BOOL)showGlow {
+- (void)setShowGlow:(BOOL)showGlow withColor:(UIColor *)color {
     if (showGlow) {
-        self.layer.shadowColor = [[UIColor blackColor] CGColor];
+        self.layer.shadowColor = [color CGColor];
         self.layer.shadowRadius = 4.0f;
         self.layer.shadowOpacity = .9;
         self.layer.shadowOffset = CGSizeZero;
         self.layer.masksToBounds = NO;
     } else {
-        self.layer.shadowColor = [[UIColor blackColor] CGColor];
+        self.layer.shadowColor = [color CGColor];
         self.layer.shadowRadius = 4.0f;
         self.layer.shadowOpacity = 0.0;
         self.layer.shadowOffset = CGSizeZero;

@@ -10,7 +10,6 @@
 #import "TLFormField+Protected.h"
 
 
-
 @interface TLFormFieldSingleLine () <UITextFieldDelegate>
 
 @end
@@ -22,7 +21,6 @@
 - (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
     [super setupFieldWithInputType:inputType forEdit:editing];
     
-    self.titleLabelFontSize = editing ? 14 : 12;
     UIView *titleView = [self titleView];
     [self addSubview:titleView];
     
@@ -38,9 +36,8 @@
             case TLFormFieldInputTypeDefault: {
                 
                 UITextField *textField = [[UITextField alloc] init];
-                textField.tag = 1001;
-                textField.font = [UIFont systemFontOfSize:self.titleLabelFontSize];
-                textField.borderStyle = UITextBorderStyleRoundedRect;
+                textField.tag = TLFormFieldValueLabelTag;
+                textField.textAlignment = NSTextAlignmentRight;
                 textField.translatesAutoresizingMaskIntoConstraints = NO;
                 textField.delegate = self;
                 
@@ -48,35 +45,21 @@
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
                 
-                if (inputType == TLFormFieldInputTypeNumeric) {
+                if (inputType == TLFormFieldInputTypeNumeric)
                     textField.keyboardType = UIKeyboardTypeNumberPad;
-                    
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-bp-[textField(==70)]-np-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterY
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterX
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[textField]-sp-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterX
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                } else {
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[textField]-sp-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterX
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-np-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterY
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[textField]-np-|"
-                                                                                 options:NSLayoutFormatAlignAllCenterY
-                                                                                 metrics:self.defaultMetrics
-                                                                                   views:views]];
-                }
+                
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[textField]-sp-|"
+                                                                             options:NSLayoutFormatAlignAllCenterX
+                                                                             metrics:self.defaultMetrics
+                                                                               views:views]];
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-np-|"
+                                                                             options:NSLayoutFormatAlignAllCenterY
+                                                                             metrics:self.defaultMetrics
+                                                                               views:views]];
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[textField]-np-|"
+                                                                             options:NSLayoutFormatAlignAllCenterY
+                                                                             metrics:self.defaultMetrics
+                                                                               views:views]];
                 
                 break;
             }
@@ -84,9 +67,8 @@
             case TLFormFieldInputTypeInlineSelect: {
                 
                 UISegmentedControl *segmented = [[UISegmentedControl alloc] init];
-                segmented.tag = 1001;
+                segmented.tag = TLFormFieldValueLabelTag;
                 segmented.translatesAutoresizingMaskIntoConstraints = NO;
-                segmented.backgroundColor = [UIColor whiteColor];
                 [segmented addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
                 
                 for (NSString *choice in self.choicesValues)
@@ -113,9 +95,8 @@
             case TLFormFieldInputTypeInlineYesNo: {
                 
                 UISwitch *yesNoSelect = [[UISwitch alloc] init];
-                yesNoSelect.tag = 1001;
+                yesNoSelect.tag = TLFormFieldValueLabelTag;
                 yesNoSelect.translatesAutoresizingMaskIntoConstraints = NO;
-                //                yesNoSelect.tintColor = [UIColor gt_greenColor];
                 [yesNoSelect addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
                 
                 [self addSubview:yesNoSelect];
@@ -125,7 +106,7 @@
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-np-[yesNoSelect]-np-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[yesNoSelect]-|"
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
@@ -139,8 +120,7 @@
     } else {
         
         UILabel *valueLabel = [[UILabel alloc] init];
-        valueLabel.tag = 1001;
-        valueLabel.font = [UIFont systemFontOfSize:12];
+        valueLabel.tag = TLFormFieldValueLabelTag;
         valueLabel.numberOfLines = 1;
         valueLabel.textAlignment = NSTextAlignmentRight;
         valueLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -197,7 +177,7 @@
         stringValue = fieldValue;
     
     
-    id valueView = [self viewWithTag:1001];
+    id valueView = [self viewWithTag:TLFormFieldValueLabelTag];
     
     if ([valueView respondsToSelector:@selector(setText:)])
         [valueView performSelector:@selector(setText:) withObject:stringValue];
@@ -220,7 +200,7 @@
 }
 
 - (id)getValue {
-    id valueView = [self viewWithTag:1001];
+    id valueView = [self viewWithTag:TLFormFieldValueLabelTag];
     
     if ([valueView respondsToSelector:@selector(text)])
         return [valueView performSelector:@selector(text)];
@@ -244,12 +224,15 @@
     [self.delegate didSelectField:self];
     
     BOOL shouleEdit = self.inputType != TLFormFieldInputTypeCustom;
-    [textField setShowGlow:shouleEdit];
+    [textField setShowGlow:shouleEdit withColor:self.highlightColor];
+    
+    [self.delegate didSelectField:self];
+    
     return shouleEdit;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [textField setShowGlow:NO];
+    [textField setShowGlow:NO withColor:self.highlightColor];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

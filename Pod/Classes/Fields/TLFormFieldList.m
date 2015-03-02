@@ -34,6 +34,7 @@
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     titleLabel.text = self.title;
+    titleLabel.tag = 4321;
     [self addSubview:titleLabel];
     
     tableView = [[UITableView alloc] init];

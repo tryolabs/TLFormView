@@ -22,6 +22,7 @@
 		9BECE1C41A9CBBD100CE2FD5 /* TLFormFieldImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C31A9CBBD100CE2FD5 /* TLFormFieldImage.m */; };
 		9BECE1C71A9CBC7D00CE2FD5 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C61A9CBC7D00CE2FD5 /* UIView+Glow.m */; };
 		9BECE1CA1A9CC4FE00CE2FD5 /* TLFormModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1C91A9CC4FE00CE2FD5 /* TLFormModel.m */; };
+		9BECE1D21A9F899500CE2FD5 /* TLFormField+UIAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1D11A9F899500CE2FD5 /* TLFormField+UIAppearance.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,9 @@
 		9BECE1C61A9CBC7D00CE2FD5 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
 		9BECE1C81A9CC4FE00CE2FD5 /* TLFormModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLFormModel.h; sourceTree = "<group>"; };
 		9BECE1C91A9CC4FE00CE2FD5 /* TLFormModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLFormModel.m; sourceTree = "<group>"; };
+		9BECE1D01A9F899500CE2FD5 /* TLFormField+UIAppearance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLFormField+UIAppearance.h"; sourceTree = "<group>"; };
+		9BECE1D11A9F899500CE2FD5 /* TLFormField+UIAppearance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLFormField+UIAppearance.m"; sourceTree = "<group>"; };
+		9BECE1D31A9F89E200CE2FD5 /* TLFormAllFields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLFormAllFields.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +115,8 @@
 		9BECE1AB1A9B5B9800CE2FD5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				9BECE1B11A9CACEA00CE2FD5 /* Form Fields */,
+				9BECE1CF1A9F898900CE2FD5 /* Style */,
+				9BECE1B11A9CACEA00CE2FD5 /* Fields */,
 				9BECE1AD1A9B5B9800CE2FD5 /* TLFormView.h */,
 				9BECE1AE1A9B5B9800CE2FD5 /* TLFormView.m */,
 				9BECE1C81A9CC4FE00CE2FD5 /* TLFormModel.h */,
@@ -121,7 +126,7 @@
 			path = ../../Pod/Classes;
 			sourceTree = "<group>";
 		};
-		9BECE1B11A9CACEA00CE2FD5 /* Form Fields */ = {
+		9BECE1B11A9CACEA00CE2FD5 /* Fields */ = {
 			isa = PBXGroup;
 			children = (
 				9BECE1B21A9CAD7800CE2FD5 /* TLFormField.h */,
@@ -139,8 +144,18 @@
 				9BECE1C31A9CBBD100CE2FD5 /* TLFormFieldImage.m */,
 				9BECE1C51A9CBC7D00CE2FD5 /* UIView+Glow.h */,
 				9BECE1C61A9CBC7D00CE2FD5 /* UIView+Glow.m */,
+				9BECE1D31A9F89E200CE2FD5 /* TLFormAllFields.h */,
 			);
-			path = "Form Fields";
+			path = Fields;
+			sourceTree = "<group>";
+		};
+		9BECE1CF1A9F898900CE2FD5 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				9BECE1D01A9F899500CE2FD5 /* TLFormField+UIAppearance.h */,
+				9BECE1D11A9F899500CE2FD5 /* TLFormField+UIAppearance.m */,
+			);
+			path = Style;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,6 +230,7 @@
 			files = (
 				9BECE18E1A9B5B4D00CE2FD5 /* ViewController.m in Sources */,
 				9BECE1C71A9CBC7D00CE2FD5 /* UIView+Glow.m in Sources */,
+				9BECE1D21A9F899500CE2FD5 /* TLFormField+UIAppearance.m in Sources */,
 				9BECE18B1A9B5B4D00CE2FD5 /* AppDelegate.m in Sources */,
 				9BECE1B81A9CB6DD00CE2FD5 /* TLFormFieldList.m in Sources */,
 				9BECE1B01A9B5B9800CE2FD5 /* TLFormView.m in Sources */,

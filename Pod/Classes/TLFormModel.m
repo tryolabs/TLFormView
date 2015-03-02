@@ -76,7 +76,7 @@ typedef enum {
 @property (nonatomic, readonly) TLFormFieldType fieldType;
 @property (nonatomic, readonly) TLFormFieldInputType inputType;
 @property (nonatomic, readonly) NSString *title;
-@property (nonatomic, readonly) TLFormValueType type;
+@property (nonatomic, readonly) TLFormValueType valueType;
 
 + (instancetype)withObjcProperty:(objc_property_t)property;
 
@@ -95,7 +95,7 @@ typedef enum {
     propertyType = [propertyType substringFromIndex:3];
     propertyType = [propertyType substringToIndex:[propertyType rangeOfString:@"\""].location];
     
-    pi->_type = [pi valueTypeFromString:propertyType];
+    pi->_valueType = [pi valueTypeFromString:propertyType];
     [pi setupFieldInfo];
     
     return pi;
@@ -119,7 +119,7 @@ typedef enum {
     
     //Map the value types to field and input types to define de behaviour of each type of value
     
-    switch (self.type) {
+    switch (self.valueType) {
             
         case TLFormValueTypeSeparator:
             _inputType = TLFormFieldInputTypeDefault;
@@ -172,13 +172,13 @@ typedef enum {
             break;
         
         default:
-            [NSException raise:@"Invalid form value type" format:@"Raw value: %d", self.type];
+            [NSException raise:@"Invalid form value type" format:@"Raw value: %d", self.valueType];
             break;
     }
     
     
     //The separator are a TLFormTitle with an empty title
-    if (self.type == TLFormValueTypeSeparator)
+    if (self.valueType == TLFormValueTypeSeparator)
         _title = @" ";
     else {
         //For the rest of te fields the title is calculated from the property name converting the "_" in spaces and
@@ -199,6 +199,10 @@ typedef enum {
 @implementation TLFormModel {
     NSMutableArray *propertiesInfo;
     NSArray *propertiesIndex;
+}
+
+- (TLPropertyInfo *)infoFormFieldWithName:(NSString *)fieldName {
+    return propertiesInfo[[propertiesIndex indexOfObject:fieldName]];
 }
 
 #pragma mark - TLFormViewDataSource
@@ -225,23 +229,23 @@ typedef enum {
 
 - (TLFormField *)formView:(TLFormView *)form fieldForName:(NSString *)fieldName {
     
-    TLPropertyInfo *info = propertiesInfo[[propertiesIndex indexOfObject:fieldName]];
+    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
     id value = nil;
     NSArray *choices;
     
-    if (info.fieldType == TLFormFieldTypeTitle)
-        value = info.title;
+    if (fieldInfo.fieldType == TLFormFieldTypeTitle)
+        value = fieldInfo.title;
     else {
         value = [self valueForKey:fieldName];
         
         //Get the choices for the enumerated type
-        if (info.type == TLFormValueTypeEnumerated) {
+        if (fieldInfo.valueType == TLFormValueTypeEnumerated) {
             choices = value[TLFormEnumeratedAllValues];
             value = value[TLFormEnumeratedSelectedValue];
         }
     }
     
-    TLFormField *field = [TLFormField formFieldWithType:info.fieldType name:fieldName title:info.title andDefaultValue:value];
+    TLFormField *field = [TLFormField formFieldWithType:fieldInfo.fieldType name:fieldName title:fieldInfo.title andDefaultValue:value];
     
     if (choices)
         field.choicesValues = choices;
@@ -249,9 +253,28 @@ typedef enum {
     return field;
 }
 
+- (id)formView:(TLFormView *)form valueForFieldWithName:(NSString *)fieldName {
+    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
+    id value = [self valueForKey:fieldName];
+    
+    switch (fieldInfo.valueType) {
+        case TLFormValueTypeBoolean:
+            return [value boolValue] ? @"Yes" : @"No";
+        
+        case TLFormValueTypeEnumerated:
+            return value[TLFormEnumeratedSelectedValue];
+        
+        case TLFormValueTypeTitle:
+            return fieldInfo.title;
+            
+        default:
+            return value;
+    }
+}
+
 - (TLFormFieldInputType)formView:(TLFormView *)form inputTypeForFieldWithName:(NSString *)fieldName {
-    TLPropertyInfo *info = propertiesInfo[[propertiesIndex indexOfObject:fieldName]];
-    return info.inputType;
+    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
+    return fieldInfo.inputType;
 }
 
 - (NSArray *)constraintsFormatForFieldsInForm:(TLFormView *)form {
@@ -266,20 +289,20 @@ typedef enum {
         NSString *verticalConsFormat;
         
         if ([propertiesIndex firstObject] == propertyName)
-            verticalConsFormat = @"V:|-margin -[%@]";
+            verticalConsFormat = @"V:|-margin-[%@(>=44)]";
         
         else {
             
             NSString *previousProperty = propertiesIndex[i - 1];
             
             if ([propertiesIndex lastObject] == propertyName)
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-margin -[%%@]-margin -|", previousProperty];
+                verticalConsFormat = [NSString stringWithFormat:@"V:[%@(>=44)]-(==0.0)-[%%@(>=44)]-margin-|", previousProperty];
             else
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@]-margin -[%%@]", previousProperty];
+                verticalConsFormat = [NSString stringWithFormat:@"V:[%@(>=44)]-(==0.0)-[%%@(>=44)]", previousProperty];
         }
         
         [constraints addObject:[NSString stringWithFormat:verticalConsFormat, propertyName]];
-        [constraints addObject:[NSString stringWithFormat:@"|-margin -[%@]-margin -|", propertyName]];
+        [constraints addObject:[NSString stringWithFormat:@"|-margin-[%@]-margin-|", propertyName]];
     }
     
     return constraints;
@@ -288,11 +311,28 @@ typedef enum {
 #pragma mark - TLFormViewDelegate
 
 - (void)formView:(TLFormView *)form didSelecteField:(TLFormField *)field {
-    
+    //Do nothing.
 }
 
 - (void)formView:(TLFormView *)form didChangeValueForField:(TLFormField *)field newValue:(id)value {
-    [self setValue:value forKey:field.fieldName];
+    NSString *fieldName = field.fieldName;
+    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
+    
+    switch (fieldInfo.valueType) {
+        case TLFormValueTypeBoolean:
+            [self setValue:@([value boolValue]) forKey:fieldName];
+            break;
+            
+        case TLFormValueTypeEnumerated: {
+            NSMutableDictionary *enumValue = [[self valueForKey:fieldName] mutableCopy];
+            [enumValue setObject:value forKey:TLFormEnumeratedSelectedValue];
+            [self setValue:enumValue forKey:fieldName];
+            break;
+        }
+            
+        default:
+            [self setValue:value forKey:fieldName];
+    }
 }
 
 - (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {

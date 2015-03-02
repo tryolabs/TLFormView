@@ -23,6 +23,8 @@
     UIView *containerView;
     NSMutableArray *fieldsWithVisibilityPredicate;
     BOOL needsReload;
+    TLFormField *selectedField;
+    UIEdgeInsets defaultInsets;
 }
 
 #pragma mark Initialization
@@ -47,6 +49,11 @@
     
     //Fire an automaric reload on the view first display.
     needsReload = YES;
+    
+    //Handle the keyboard presentation
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     //NOTE: this is commented because it breaks some layouts. It seams to be working fine because it not affect the subviews.
     //Avoid translate the posible autoresizing mask values to constraints
@@ -86,6 +93,10 @@
 #pragma mark - TLFormFieldDelegate
 
 - (void)didSelectField:(TLFormField *)field {
+    
+    //Remember the selected field for handling the keyboard
+    selectedField = field;
+    
     if ([self.formDelegate respondsToSelector:@selector(formView:didSelecteField:)])
         [self.formDelegate formView:self didSelecteField:field];
 }
@@ -295,6 +306,45 @@
         
         [self updateFieldsVisibility];
     }
+}
+
+#pragma mark - Keyboard Handling
+
+- (void)handleKeyboardShow:(NSNotification *)notification {
+    
+    //If the keyboard is apprearing for any reason other than our fields ignore it
+    if (!selectedField)
+        return;
+    
+    NSDictionary *info = [notification userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    if (UIEdgeInsetsEqualToEdgeInsets(defaultInsets, UIEdgeInsetsZero))
+        defaultInsets = self.contentInset;
+    
+    UIEdgeInsets contentInsets = self.contentInset;
+    contentInsets.bottom = keyboardSize.height;
+    
+    self.contentInset = contentInsets;
+    self.scrollIndicatorInsets = contentInsets;
+    
+    CGRect aRect = self.frame;
+    aRect.size.height -= keyboardSize.height;
+    
+    CGRect fieldFrame = selectedField.frame;
+    CGPoint fieldBottomRight = CGPointMake(fieldFrame.origin.x + fieldFrame.size.width, fieldFrame.origin.y + fieldFrame.size.height);
+    
+    if (!CGRectContainsPoint(aRect, fieldBottomRight))
+        [self scrollRectToVisible:fieldFrame animated:NO];
+}
+
+- (void)handleKeyboardHide:(NSNotification *)notification {
+    self.contentInset = defaultInsets;
+    self.scrollIndicatorInsets = defaultInsets;
+}
+
+- (void)orientationChange:(NSNotification *)notification {
+    [self endEditing:YES];
 }
 
 @end

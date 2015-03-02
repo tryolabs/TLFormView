@@ -87,9 +87,7 @@ typedef enum : NSUInteger {
 //The list of values to show in the segmented controll created for the TLFormFieldTypeSingleLine / TLFormFieldInputTypeInlineSelect combination
 @property (nonatomic, strong) NSArray *choicesValues;
 
-
 //Construct a field with the given parameters. The defaul value is the one that should be visible if no value is returned throuht the TLFormViewDataSource
 + (id)formFieldWithType:(TLFormFieldType)fieldType name:(NSString *)fieldName title:(NSString *)displayName andDefaultValue:(id)defaultValue;
 
 @end
-

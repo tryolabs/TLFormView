@@ -7,6 +7,7 @@
 //
 
 #import "TLFormField.h"
+#import "TLFormField+UIAppearance.h"
 #import "UIView+Glow.h"
 
 
@@ -24,6 +25,8 @@
 @end
 
 
+extern int const TLFormFieldTitleLabelTag;
+extern int const TLFormFieldValueLabelTag;
 
 
 //Forward declaration of some properties and methods used for the subclases
@@ -32,8 +35,9 @@
 
 @property (nonatomic, strong) id defautValue;
 @property (nonatomic, weak) id <TLFormFieldDelegate> delegate;
-@property (nonatomic, assign) CGFloat titleLabelFontSize;
 @property (nonatomic, readonly) NSDictionary *defaultMetrics;
+@property (nonatomic, strong) UIColor *highlightColor;
+@property (nonatomic, assign) TLFormBorderStyleMask borderStyle;
 
 - (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing;
 - (void)setValue:(id)fieldValue;

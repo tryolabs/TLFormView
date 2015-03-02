@@ -83,11 +83,12 @@
 //UITextFieldDelegate
 
 - (void)textViewDidBeginEditing:(UITextView *)_textView {
-    [_textView setShowGlow:YES];
+    [_textView setShowGlow:YES withColor:self.highlightColor];
+    [self.delegate didSelectField:self];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)_textView {
-    [_textView setShowGlow:NO];
+    [_textView setShowGlow:NO withColor:self.highlightColor];
 }
 
 - (BOOL)textView:(UITextView *)_textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {

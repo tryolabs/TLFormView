@@ -8,11 +8,7 @@
 
 #import "TLFormField.h"
 #import "TLFormField+Protected.h"
-#import "TLFormFieldList.h"
-#import "TLFormFieldMultiLine.h"
-#import "TLFormFieldSingleLine.h"
-#import "TLFormFieldImage.h"
-#import "TLFormFieldTitle.h"
+#import "TLFormAllFields.h"
 
 
 
@@ -102,6 +98,8 @@
 - (id)initWithType:(TLFormFieldType)fieldType name:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
     self = [super init];
     
+    self.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
+    
     if (self) {
         self.fieldName = fieldName;
         self.defautValue = defaultValue;
@@ -117,6 +115,50 @@
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if (self.borderStyle != TLFormFieldBorderNone) {
+        
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        CGSize size = CGRectIntegral(self.bounds).size;
+        
+        if (self.borderStyle & TLFormFieldBorderTop) {
+            [path moveToPoint:CGPointZero];
+            [path addLineToPoint:CGPointMake(size.width, 0)];
+        }
+        
+        if (self.borderStyle & TLFormFieldBorderRight) {
+            [path moveToPoint:CGPointMake(size.width, 0)];
+            [path addLineToPoint:CGPointMake(size.width, size.height)];
+        }
+        
+        if (self.borderStyle & TLFormFieldBorderBotom) {
+            [path moveToPoint:CGPointMake(size.width, size.height)];
+            [path addLineToPoint:CGPointMake(0, size.height)];
+        }
+        
+        if (self.borderStyle & TLFormFieldBorderLeft) {
+            [path moveToPoint:CGPointMake(0, size.height)];
+            [path addLineToPoint:CGPointZero];
+        }
+        
+        CAShapeLayer *border = [CAShapeLayer layer];
+        border.name = @"TLFomFieldBorderLayer";
+        border.path = path.CGPath;
+        border.strokeColor = [[UIColor blackColor] CGColor];
+        
+        for (CALayer *layer in self.layer.sublayers) {
+            if ([layer.name isEqualToString:@"TLFomFieldBorderLayer"]) {
+                [layer removeFromSuperlayer];
+                break;
+            }
+        }
+        
+        [self.layer addSublayer:border];
+    }
+}
+
 - (NSDictionary *)defaultMetrics {
     return @{@"sp": @1.0,   //small padding
              @"np": @2.0,   //normal padding
@@ -125,13 +167,6 @@
 
 - (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
     self.inputType = inputType;
-    
-    if (editing) {
-        //Set the border of the field
-        self.layer.cornerRadius = 5.0;
-        self.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-        self.layer.borderWidth = 0.5;
-    }
 }
 
 #pragma mark - Hidden
@@ -171,9 +206,9 @@
     UILabel *title = [[UILabel alloc] init];
     title.numberOfLines = 2;
     title.lineBreakMode = NSLineBreakByWordWrapping;
-    title.font = [UIFont systemFontOfSize:self.titleLabelFontSize];
     title.translatesAutoresizingMaskIntoConstraints = NO;
     title.text = self.title;
+    title.tag = TLFormFieldTitleLabelTag;
     
     if (self.helpText) {
         UIButton *showHelpButton = [[UIButton alloc] init];

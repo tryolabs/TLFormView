@@ -10,6 +10,6 @@
 
 @interface UIView (Glow)
 
-- (void)setShowGlow:(BOOL)showGlow;
+- (void)setShowGlow:(BOOL)showGlow withColor:(UIColor *)color;
 
 @end

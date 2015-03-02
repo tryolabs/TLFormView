@@ -24,6 +24,7 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:18.0];
     titleLabel.numberOfLines = 0;
     
+    self.backgroundColor = [UIColor clearColor];
     [self addSubview:titleLabel];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel);
@@ -37,6 +38,10 @@
                                                                    views:views]];
     
     [self setValue:self.defautValue];
+}
+
+- (TLFormBorderStyleMask)borderStyle {
+    return TLFormFieldBorderNone;
 }
 
 - (CGSize)intrinsicContentSize {

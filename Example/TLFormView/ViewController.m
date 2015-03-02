@@ -90,11 +90,13 @@
     
     self.form.formDataSource = user;
     self.form.formDelegate = user;
-    self.form.margin = 0.0;
-//
-//    [[TLFormView appearance] setBackgroundColor:[UIColor blueColor]];
-//    [[TLFormField appearance] setBackgroundColor:[UIColor redColor]];
-//    [[TLFormFieldList appearance] setBackgroundColor:[UIColor greenColor]];
+    
+    self.form.backgroundColor = [UIColor lightGrayColor];
+    [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
+    
+    [[UISegmentedControl appearanceWhenContainedIn:[TLFormField class], nil] setTintColor:[UIColor magentaColor]];
+    [[UITextField appearanceWhenContainedIn:[TLFormField class], nil] setBackgroundColor:[UIColor greenColor]];
+    [[UITextView appearanceWhenContainedIn:[TLFormField class], nil] setBackgroundColor:[UIColor brownColor]];
 }
 
 - (IBAction)toggleEditionAction:(id)sender {
