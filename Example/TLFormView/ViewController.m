@@ -13,22 +13,6 @@
 #import "TLFormField+UIAppearance.h"
 
 
-/*
- TLFormText
- TLFormLongText
- TLFormNumber
- TLFormBoolean
- TLFormEnumerated
- TLFormImage
- TLFormList
- TLFormTitle
-*/
-
-
-
-
-
-
 @interface UserModel : TLFormModel
 
 @property (nonatomic, strong) TLFormTitle *user_info;
@@ -44,24 +28,6 @@
 @end
 
 @implementation UserModel @end
-
-
-
-
-/*
- Face:
- - Color de fondo form
- - Color de fondo del titulo de un field
- - Color de fondo del valor de un field
- - Fuente del titulo de un field
- - Fuente del valor de un field
- - Color del segmented
- - Color / icono del help y add para listas
- - Color / fuente para el popup de help
- */
-
-
-
 
 
 
@@ -87,16 +53,18 @@
     user.friends = TLFormListValue(@[@"friend 0", @"friend 1", @"friend 2", @"friend 3", @"friend 4"]);
     user.hobbies = TLFormEnumeratedValue(@"other 1", @[@"other 1", @"other 2"]);
     
-    NSURL *url = [NSURL URLWithString:@"http://www.infragistics.com/community/cfs-filesystemfile.ashx/__key/CommunityServer.Components.Avatars/00.00.00.22.06/4TR8IIORTEON.jpg_2D00_90x90.jpg"];
+    NSURL *url = [NSURL URLWithString:@"https://s-media-cache-ak0.pinimg.com/custom_covers/216x146/413557246971119139_1385652535.jpg"];
     user.avatar = TLFormImageValue(url);
     
     self.form.formDataSource = user;
     self.form.formDelegate = user;
+    self.form.margin = 0.0;
     
     self.form.backgroundColor = [UIColor lightGrayColor];
     [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
     [[TLFormField appearance] setHightlightColor:[UIColor blueColor]];
     [[TLFormField textFieldAppearance] setBorderStyle:UITextBorderStyleRoundedRect];
+    [[TLFormField segmentedAppearance] setTintColor:[UIColor blueColor]];
 }
 
 - (IBAction)toggleEditionAction:(id)sender {

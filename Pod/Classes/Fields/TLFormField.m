@@ -11,12 +11,21 @@
 #import "TLFormAllFields.h"
 
 
+@implementation UIPopoverController (iPhoneSupport)
+
++ (BOOL)_popoversDisabled {
+    return NO;
+}
+
+@end
+
+
 
 #pragma mark - HelpTooltipPopoverControler
 /**************************************************  HelpTooltipPopoverControler  ***************************************************************/
 //This class is the content of the help tooltip. It's only a UITextView that display the value of 'helpText' property
 
-@interface HelpTooltipPopoverControler : UIViewController
+@interface HelpTooltipPopoverControler : UIViewController <UIPopoverPresentationControllerDelegate>
 + (id)helpTooltipControllerWithText:(NSString *)helpText;
 @end
 
@@ -28,6 +37,8 @@
 + (id)helpTooltipControllerWithText:(NSString *)helpText {
     HelpTooltipPopoverControler *controller = [[HelpTooltipPopoverControler alloc] init];
     controller->text = helpText;
+    controller.modalPresentationStyle = UIModalPresentationPopover;
+    controller.popoverPresentationController.delegate = controller;
     return controller;
 }
 
@@ -37,8 +48,6 @@
     textView = [[UITextView alloc] init];
     textView.translatesAutoresizingMaskIntoConstraints = NO;
     textView.font = [UIFont systemFontOfSize:13];
-    textView.backgroundColor = [UIColor greenColor];
-    textView.textColor = [UIColor whiteColor];
     textView.scrollEnabled = NO;
     textView.editable = NO;
     textView.selectable = NO;
@@ -57,7 +66,11 @@
 
 - (CGSize)preferredContentSize {
     BOOL is_iPhone = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone;
-    return [textView sizeThatFits:CGSizeMake(is_iPhone ? 200 : 300, INFINITY)];
+    return [textView sizeThatFits:CGSizeMake(is_iPhone ? 200 : 250, INFINITY)];
+}
+
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller {
+    return UIModalPresentationNone;
 }
 
 @end
@@ -225,7 +238,7 @@
         [titleContainer addSubview:showHelpButton];
         
         NSDictionary *views = NSDictionaryOfVariableBindings(title, showHelpButton);
-        [titleContainer addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[title]-[showHelpButton]|"
+        [titleContainer addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[title]-[showHelpButton]"
                                                                                options:NSLayoutFormatAlignAllCenterY
                                                                                metrics:nil
                                                                                  views:views]];
@@ -240,7 +253,6 @@
 
 - (void)showHelpAction:(UIButton *)sender {
     popover = [[UIPopoverController alloc] initWithContentViewController:[HelpTooltipPopoverControler helpTooltipControllerWithText:self.helpText]];
-    popover.backgroundColor = [UIColor greenColor];
     [popover presentPopoverFromRect:sender.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 

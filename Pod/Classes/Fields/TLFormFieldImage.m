@@ -105,9 +105,13 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
     if (!fieldValue)
         imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
     
+    else if ([fieldValue isKindOfClass:[UIImage class]])
+        imageView.image = fieldValue;
+    
     //If the value is an URL
     else if ([fieldValue isKindOfClass:[NSURL class]]) {
         
+        //Show a spinner on the image view while download the image
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [spinner startAnimating];
         spinner.translatesAutoresizingMaskIntoConstraints = NO;
@@ -121,10 +125,9 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
                                                                           metrics:nil
                                                                             views:NSDictionaryOfVariableBindings(spinner)]];
         
-        
         void (^downloadCompleteHandler)(NSURL *, NSURLResponse *, NSError *) = ^(NSURL *location, NSURLResponse *response, NSError *error){
             
-            [spinner performSelectorOnMainThread:@selector(removeFromSuperview) withObject:nil waitUntilDone:NO];
+            UIImage *image;
             
             if (!error) {
                 //We need to add the extension to the file name so get it from the 'fieldValue' and append it to the tmp file
@@ -134,21 +137,23 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
                 NSError *error;
                 [[NSFileManager defaultManager] moveItemAtPath:[location path] toPath:finalPath error:&error];
                 
-                if (!error) {
-                    UIImage *image = [UIImage imageWithContentsOfFile:finalPath];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        imageView.image = image;
-                        [imageView setNeedsLayout];
-                    });
-                } else {
+                if (!error)
+                    image = [UIImage imageWithContentsOfFile:finalPath];
+                else {
                     NSLog(@"TLFormView: Error moving tmp file at url: %@ - Error: %@", location, error);
-                    imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
+                    image = [UIImage imageNamed:TLFormFieldNoImageName];
                 }
                 
             } else {
                 NSLog(@"TLFormView: Error getting image with url: %@ - Error: %@", fieldValue, error);
-                imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
+                image = [UIImage imageNamed:TLFormFieldNoImageName];
             }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [spinner removeFromSuperview];
+                imageView.image = image;
+                [imageView setNeedsLayout];
+            });
             
         };
         
@@ -156,10 +161,7 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
         [imageDownloadTask cancel];
         imageDownloadTask = [[NSURLSession sharedSession] downloadTaskWithRequest:[NSURLRequest requestWithURL:fieldValue] completionHandler:downloadCompleteHandler];
         [imageDownloadTask resume];
-     }
-    
-    else if ([fieldValue isKindOfClass:[UIImage class]])
-        imageView.image = fieldValue;
+    }
 }
 
 - (id)getValue {
