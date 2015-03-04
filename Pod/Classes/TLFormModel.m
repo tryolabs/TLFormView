@@ -30,28 +30,61 @@
  (Image or URL) -> File URL:
  TLFormImage
  
- Date -> Date:
- TLFormDate
 */
 
 @implementation TLFormSeparator : NSObject @end
+TLFormSeparator * TLFormSeparatorValue () {
+    return [TLFormSeparator new];
+}
 
 @implementation TLFormText : NSString @end
+TLFormText * TLFormTextValue(NSString *text) {
+    return (TLFormText *) [text copy];
+}
+
 @implementation TLFormLongText : NSString @end
+TLFormLongText * TLFormLongTextValue(NSString *longText) {
+    return (TLFormLongText *) [longText copy];
+}
+
 @implementation TLFormTitle : NSString @end
+TLFormTitle * TLFormTitleValue (NSString *title) {
+    return (TLFormTitle *) [title copy];
+}
 
 @implementation TLFormNumber : NSNumber @end
+TLFormNumber * TLFormNumberValue (NSNumber *number) {
+    return (TLFormNumber *) [number copy];
+}
+
 @implementation TLFormBoolean : NSNumber @end
+TLFormBoolean * TLFormBooleanValue (BOOL boolean) {
+    return (TLFormBoolean *) [TLFormBoolean numberWithBool:boolean];
+}
 
 @implementation TLFormEnumerated : NSDictionary @end
 NSString * const TLFormEnumeratedSelectedValue = @"TLFormEnumeratedSelectedValue";
 NSString * const TLFormEnumeratedAllValues = @"TLFormEnumeratedAllValues";
 
+TLFormEnumerated * TLFormEnumeratedValue (id current, NSArray *all) {
+    return (TLFormEnumerated *) @{TLFormEnumeratedSelectedValue: current,
+                                  TLFormEnumeratedAllValues: all};
+}
+
 @implementation TLFormList : NSArray @end
+TLFormList * TLFormListValue(NSArray *array) {
+    return (TLFormList *) [array copy];
+}
 
 @implementation TLFormImage : NSObject @end
-
-@implementation TLFormDate : NSDate @end
+TLFormImage * TLFormImageValue (NSObject *urlOrImage) {
+    if ([urlOrImage isKindOfClass:[UIImage class]] || [urlOrImage isKindOfClass:[NSURL class]]) {
+        return (TLFormImage *) [urlOrImage copy];
+    } else {
+        [NSException raise:@"Invalid image type" format:@"Should be UIImage or NSURL but it is: %@", NSStringFromClass([urlOrImage class])];
+        return nil;
+    }
+}
 
 
 
@@ -111,8 +144,7 @@ typedef enum {
               @"TLFormBoolean",
               @"TLFormEnumerated",
               @"TLFormList",
-              @"TLFormImage",
-              @"TLFormDate"] indexOfObject:stringType] + 1;
+              @"TLFormImage"] indexOfObject:stringType] + 1;
 }
 
 - (void)setupFieldInfo {
@@ -322,14 +354,14 @@ typedef enum {
         case TLFormValueTypeBoolean:
             [self setValue:@([value boolValue]) forKey:fieldName];
             break;
-            
+        
         case TLFormValueTypeEnumerated: {
             NSMutableDictionary *enumValue = [[self valueForKey:fieldName] mutableCopy];
             [enumValue setObject:value forKey:TLFormEnumeratedSelectedValue];
             [self setValue:enumValue forKey:fieldName];
             break;
         }
-            
+        
         default:
             [self setValue:value forKey:fieldName];
     }

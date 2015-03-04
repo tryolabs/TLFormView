@@ -37,7 +37,6 @@
     textView.scrollEnabled = NO;
     textView.editable = editing;
     textView.translatesAutoresizingMaskIntoConstraints = NO;
-    textView.backgroundColor = [UIColor whiteColor];
     textView.delegate = self;
     [self addSubview:textView];
     

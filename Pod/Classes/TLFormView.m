@@ -51,9 +51,12 @@
     needsReload = YES;
     
     //Handle the keyboard presentation
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardShow:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    
+    [defaultCenter removeObserver:self];
+    [defaultCenter addObserver:self selector:@selector(handleKeyboardShow:) name:UIKeyboardDidShowNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(handleKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(orientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     //NOTE: this is commented because it breaks some layouts. It seams to be working fine because it not affect the subviews.
     //Avoid translate the posible autoresizing mask values to constraints

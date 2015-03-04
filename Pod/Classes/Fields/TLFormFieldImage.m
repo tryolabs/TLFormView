@@ -11,10 +11,16 @@
 
 
 
+NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
+
+
+
 @implementation TLFormFieldImage {
     UIImageView *imageView;
-    //The reference to an image used to get the UIImage that will be loaded
+    //The reference used to store the image (get/set)value
     id imageRefValue;
+    NSURLSessionDownloadTask *imageDownloadTask;
+    
 }
 
 - (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
@@ -39,7 +45,7 @@
         views = NSDictionaryOfVariableBindings(imageView, tapRecognizer, title);
         
         //Size the title to the top of the field taking all the widht
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[title]|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-np-[title]-np-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
@@ -49,7 +55,7 @@
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
         
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[imageView]|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-np-[imageView]-np-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
@@ -97,10 +103,10 @@
     imageRefValue = fieldValue;
     
     if (!fieldValue)
-        imageView.image = [UIImage imageNamed:@"no_image.jpg"];
+        imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
     
-    //If the value is an string interpret it as an URL
-    else if ([fieldValue isKindOfClass:[NSString class]]) {
+    //If the value is an URL
+    else if ([fieldValue isKindOfClass:[NSURL class]]) {
         
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [spinner startAnimating];
@@ -115,10 +121,42 @@
                                                                           metrics:nil
                                                                             views:NSDictionaryOfVariableBindings(spinner)]];
         
-//        [imageView setImageWithURL:fieldValue placeholderImage:[UIImage imageNamed:@"placeholder.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//            [spinner removeFromSuperview];
-//        }];
-    }
+        
+        void (^downloadCompleteHandler)(NSURL *, NSURLResponse *, NSError *) = ^(NSURL *location, NSURLResponse *response, NSError *error){
+            
+            [spinner performSelectorOnMainThread:@selector(removeFromSuperview) withObject:nil waitUntilDone:NO];
+            
+            if (!error) {
+                //We need to add the extension to the file name so get it from the 'fieldValue' and append it to the tmp file
+                NSString *finalPath = [[location path] stringByAppendingPathExtension:[fieldValue pathExtension]];
+                
+                //Try to rename the file
+                NSError *error;
+                [[NSFileManager defaultManager] moveItemAtPath:[location path] toPath:finalPath error:&error];
+                
+                if (!error) {
+                    UIImage *image = [UIImage imageWithContentsOfFile:finalPath];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        imageView.image = image;
+                        [imageView setNeedsLayout];
+                    });
+                } else {
+                    NSLog(@"TLFormView: Error moving tmp file at url: %@ - Error: %@", location, error);
+                    imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
+                }
+                
+            } else {
+                NSLog(@"TLFormView: Error getting image with url: %@ - Error: %@", fieldValue, error);
+                imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
+            }
+            
+        };
+        
+        //Cancel any previous request before start a new one
+        [imageDownloadTask cancel];
+        imageDownloadTask = [[NSURLSession sharedSession] downloadTaskWithRequest:[NSURLRequest requestWithURL:fieldValue] completionHandler:downloadCompleteHandler];
+        [imageDownloadTask resume];
+     }
     
     else if ([fieldValue isKindOfClass:[UIImage class]])
         imageView.image = fieldValue;
