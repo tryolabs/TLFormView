@@ -42,6 +42,9 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
         UIView *title = [self titleView];
         [self addSubview:title];
         
+        //Set the vertical hugging priority to "requiered" so the title label allways take the minimum space requiered
+        [title setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        
         views = NSDictionaryOfVariableBindings(imageView, tapRecognizer, title);
         
         //Size the title to the top of the field taking all the widht

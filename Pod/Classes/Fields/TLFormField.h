@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+//Uncoment this to color all the subviews to chack any posible layout issues
+//#define TLFormViewLayoutDebug
 
 
 //Object in this class represent fields in the form. Each field can have one type of:
@@ -66,9 +68,6 @@ typedef enum : NSUInteger {
 
 //If not empty show a quesion mark button next to the field title when the form is on edit mode that when taped show a popver with this text
 @property (nonatomic, strong) NSString *helpText;
-
-@property (nonatomic, assign) NSInteger maxValue;
-@property (nonatomic, assign) NSInteger minValue;
 
 //If this predicate evaluates to TRUE the field es visible. The predicate is evaluated every time a field value change, by an user interaction or by calling 'refreshValues'.
 //In the predicate context, SELF is the TLFormField object that holds the predicate and all the other fields are accesible as variables.

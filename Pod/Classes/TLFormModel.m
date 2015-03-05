@@ -290,9 +290,6 @@ typedef enum {
     id value = [self valueForKey:fieldName];
     
     switch (fieldInfo.valueType) {
-        case TLFormValueTypeBoolean:
-            return [value boolValue] ? @"Yes" : @"No";
-        
         case TLFormValueTypeEnumerated:
             return value[TLFormEnumeratedSelectedValue];
         
@@ -326,11 +323,10 @@ typedef enum {
         else {
             
             NSString *previousProperty = propertiesIndex[i - 1];
+            verticalConsFormat = [NSString stringWithFormat:@"V:[%@(>=44)]-(==0)-[%%@(>=44)]", previousProperty];
             
             if ([propertiesIndex lastObject] == propertyName)
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@(>=44)]-(==0.0)-[%%@(>=44)]-margin-|", previousProperty];
-            else
-                verticalConsFormat = [NSString stringWithFormat:@"V:[%@(>=44)]-(==0.0)-[%%@(>=44)]", previousProperty];
+                verticalConsFormat = [verticalConsFormat stringByAppendingString:@"-margin-|"];
         }
         
         [constraints addObject:[NSString stringWithFormat:verticalConsFormat, propertyName]];
@@ -350,21 +346,12 @@ typedef enum {
     NSString *fieldName = field.fieldName;
     TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
     
-    switch (fieldInfo.valueType) {
-        case TLFormValueTypeBoolean:
-            [self setValue:@([value boolValue]) forKey:fieldName];
-            break;
-        
-        case TLFormValueTypeEnumerated: {
-            NSMutableDictionary *enumValue = [[self valueForKey:fieldName] mutableCopy];
-            [enumValue setObject:value forKey:TLFormEnumeratedSelectedValue];
-            [self setValue:enumValue forKey:fieldName];
-            break;
-        }
-        
-        default:
-            [self setValue:value forKey:fieldName];
-    }
+    if (fieldInfo.valueType == TLFormValueTypeEnumerated) {
+        NSMutableDictionary *enumValue = [[self valueForKey:fieldName] mutableCopy];
+        [enumValue setObject:value forKey:TLFormEnumeratedSelectedValue];
+        [self setValue:enumValue forKey:fieldName];
+    } else
+        [self setValue:value forKey:fieldName];
 }
 
 - (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {

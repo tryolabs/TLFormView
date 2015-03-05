@@ -10,13 +10,104 @@
 #import "TLFormField+Protected.h"
 
 
-@interface TLFormFieldSingleLine () <UITextFieldDelegate>
+//This category is used for handling the mapping between NSNumber types (numberWithBool:, numberWithFloat:, etc) and his string values. Ex: you give a "numberWithBool" as value
+//then the value is show as "Yes"/"No" and when the value is read you get a "numberWithBool" back. The same works for any type of number thanks to this category.
+@interface NSNumber (NumberType)
+
+- (CFNumberType)numberType;
++ (instancetype)numberOfType:(CFNumberType)type withValue:(id)value;
+
+@end
+
+//Add two specil values that will live side by side to the CFNumberType enum values
+const short kTLNumberBooleanType    = -1;
+const short kTLNumberNanType        = -2;
+
+@implementation NSNumber (NumberType)
+
+- (CFNumberType)numberType {
+    //Get if a number is NSNumber-bool value (see: http://stackoverflow.com/questions/2518761/get-type-of-nsnumber )
+    if (self == (id) kCFBooleanFalse || self == (id) kCFBooleanTrue)
+        return kTLNumberBooleanType;
+    else
+        return CFNumberGetType((CFNumberRef)self);
+}
+
+//Given a type and a value return the corresponding NSNumber. This is like use NSNumberFormatter but much better.
++ (instancetype)numberOfType:(CFNumberType)type withValue:(id)value {
+    
+    const void *numberValue = NULL;
+    
+    switch (type) {
+        case kCFNumberCharType:
+        case kCFNumberSInt8Type: {
+            char tmp = [value charValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberShortType:
+        case kCFNumberSInt16Type: {
+            short tmp = [value shortValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberIntType:
+        case kCFNumberSInt32Type: {
+            int tmp = [value intValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberLongType: {
+            long tmp = [value longValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberLongLongType:
+        case kCFNumberSInt64Type: {
+            long long tmp = [value longLongValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberCGFloatType:
+        case kCFNumberFloatType:
+        case kCFNumberFloat32Type: {
+            float tmp = [value floatValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberDoubleType:
+        case kCFNumberFloat64Type: {
+            double tmp = [value doubleValue];
+            numberValue = &tmp;
+            break;
+        }
+        case kCFNumberNSIntegerType: {
+            NSInteger tmp = [value integerValue];
+            numberValue = &tmp;
+            break;
+        }
+        default:
+            numberValue = NULL;
+            break;
+    }
+    
+    return CFBridgingRelease(CFNumberCreate(kCFAllocatorDefault, type, numberValue));
+}
 
 @end
 
 
 
-@implementation TLFormFieldSingleLine
+
+
+
+@interface TLFormFieldSingleLine () <UITextFieldDelegate>
+@end
+
+
+@implementation TLFormFieldSingleLine {
+    CFNumberType numberType;
+}
 
 - (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
     [super setupFieldWithInputType:inputType forEdit:editing];
@@ -169,11 +260,19 @@
     if (!fieldValue)
         return;
     
-    
     NSString *stringValue;
-    if ([fieldValue isKindOfClass:[NSString class]] == NO)
-        stringValue = [fieldValue stringValue];
-    else
+    if ([fieldValue isKindOfClass:[NSString class]] == NO) {
+        
+        if ([fieldValue isKindOfClass:[NSNumber class]])
+            numberType = [(NSNumber *) fieldValue numberType];
+        else
+            numberType = kTLNumberNanType;
+        
+        if (numberType == kTLNumberBooleanType)
+            stringValue = [fieldValue boolValue] ? @"Yes" : @"No";
+        else
+            stringValue = [fieldValue stringValue];
+    } else
         stringValue = fieldValue;
     
     
@@ -202,8 +301,18 @@
 - (id)getValue {
     id valueView = [self viewWithTag:TLFormFieldValueLabelTag];
     
-    if ([valueView respondsToSelector:@selector(text)])
-        return [valueView performSelector:@selector(text)];
+    if ([valueView respondsToSelector:@selector(text)]) {
+        NSString *stringValue = [valueView performSelector:@selector(text)];
+        
+        if (numberType == kTLNumberBooleanType)
+            return @([stringValue boolValue]);
+        
+        else if (numberType != kTLNumberNanType)
+            return [NSNumber numberOfType:numberType withValue:stringValue];
+            
+        else
+            return stringValue;
+    }
     
     else if ([valueView isKindOfClass:[UISegmentedControl class]]) {
         UISegmentedControl *segmented = (UISegmentedControl *)valueView;
@@ -212,7 +321,7 @@
     
     else if ([valueView isKindOfClass:[UISwitch class]]) {
         UISwitch *yesNoSelect = (UISwitch *)valueView;
-        return [NSNumber numberWithBool:yesNoSelect.on];
+        return @(yesNoSelect.on);
     }
     
     return nil;
@@ -238,35 +347,20 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     
     id newValue = nil;
-    if (string.length > 0)
-        if (self.inputType == TLFormFieldInputTypeNumeric) {
-            
-            //The lenght constraint is allway 5 for now
-            if (textField.text.length < 5) {
-                
-                //Check the min/max range
-                if (self.minValue != self.maxValue) {
-                    
-                    //Get the final value
-                    newValue = [textField.text stringByAppendingString:string];
-                    NSInteger value = [newValue integerValue];
-                    
-                    //If the value is NOT in the range left it unchanged
-                    if (value < self.minValue || value > self.maxValue)
-                        return NO;
-                } else {
-                    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-                    formatter.numberStyle = NSNumberFormatterDecimalStyle;
-                    newValue = [formatter numberFromString:[textField.text stringByAppendingString:string]];
-                }
-            } else
-                return NO;
-            
-        } else
-            newValue = [textField.text stringByAppendingString:string];
     
-        else
-            newValue = [textField.text substringToIndex:textField.text.length - 1];
+    if (string.length > 0)
+        newValue = [textField.text stringByAppendingString:string];
+    else
+        newValue = [textField.text substringToIndex:textField.text.length - 1];
+    
+    //If the input type is numeric translate the value to an NSNumber in the same domain as the one given to the fild as initial value
+    if (self.inputType == TLFormFieldInputTypeNumeric) {
+        if (numberType == kTLNumberBooleanType)
+            newValue = @([newValue boolValue]);
+        
+        else if (numberType != kTLNumberNanType)
+            newValue = [NSNumber numberOfType:numberType withValue:newValue];
+    }
     
     [self.delegate didChangeValueForField:self newValue:newValue];
     

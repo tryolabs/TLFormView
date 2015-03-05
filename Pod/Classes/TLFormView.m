@@ -10,10 +10,6 @@
 #import "TLFormField+Protected.h"
 
 
-//Uncoment this to color all the subviews to chack any posible layout issues
-//#define TLFormViewLayoutDebug
-
-
 @interface TLFormView () <TLFormFieldDelegate>
 @end
 
