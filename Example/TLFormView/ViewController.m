@@ -34,7 +34,7 @@
     
     //Add an explanation of the field. If this property has a value a quetion mark icon is display next to the field title.
     if ([fieldName isEqualToString:@"is_active"])
-        field.helpText = @"A user is active when this value is true. Otherwise the user is not active (inactive) and this value shall be false. Only avtive users can have hobbies.";
+        field.helpText = @"A user is active when this value is true. Otherwise the user is not active (inactive) and this value shall be false. Only active users can have hobbies.";
     
     //The "hobbies" field will be visible only when the user "is active"
     else if ([fieldName isEqualToString:@"hobbies"])
@@ -107,26 +107,34 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //Create and setup the object that describe the form.
     user = [[UserModel alloc] init];
-    user.name = TLFormTextValue(@"Some Long Name");
+    user.name = TLFormTextValue(@"John Doe");
     user.age = TLFormNumberValue(@42);
     user.is_active = TLFormBooleanValue(YES);
-    user._description = TLFormLongTextValue(@"It is possible to subclass NSString (and NSMutableString), but doing so requires providing storage facilities for the string (which is not inherited by subclasses) and implementing two primitive methods. The abstract NSString and NSMutableString classes are the public interface of a class cluster consisting mostly of private, concrete classes that create and return a string object appropriate for a given situation. Making your own concrete subclass of this cluster imposes certain requirements (discussed in “Methods to Override”).");
     user.friends = TLFormListValue(@[@"friend 0", @"friend 1", @"friend 2", @"friend 3", @"friend 4"]);
-    user.hobbies = TLFormEnumeratedValue(@"other 1", @[@"other 1", @"other 2"]);
+    user.hobbies = TLFormEnumeratedValue(@"3D printing", @[@"3D printing", @"Amateur radio", @"Acting"]);
+    
+    user._description = TLFormLongTextValue(@"Michael O. Church about OOP: \"OOP tries to make software look like \"the real world\" as can be understood by an average person. (CheckingAccount extends Account extends HasBalance extends Object). The problem is that it encourages people to program before they think, and it allows software to be created that mostly works but no one knows why it does.\"");
+    //Check about this passage here: http://www.quora.com/Was-object-oriented-programming-a-failure
     
     NSURL *url = [NSURL URLWithString:@"https://s-media-cache-ak0.pinimg.com/custom_covers/216x146/413557246971119139_1385652535.jpg"];
     user.avatar = TLFormImageValue(url);
     
+    //Set the model as data source and delegate of the form.
     self.form.formDataSource = user;
     self.form.formDelegate = user;
-    self.form.margin = 0.0;
     
+    //Make some visual tweaks
+    self.form.margin = 0.0;
     self.form.backgroundColor = [UIColor lightGrayColor];
+    
     [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
     [[TLFormField appearance] setHightlightColor:[UIColor blueColor]];
     [[TLFormField textFieldAppearance] setBorderStyle:UITextBorderStyleRoundedRect];
     [[TLFormField segmentedAppearance] setTintColor:[UIColor blueColor]];
+    
+    //Hide the plus button on the list of friends when the form is in edit mode.
     [[TLFormField addButtonAppearance] setHidden:YES];
 }
 
