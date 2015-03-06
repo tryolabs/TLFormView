@@ -8,7 +8,7 @@
 
 #import "TLFormModel.h"
 #import <objc/runtime.h>
-#import "TLFormField.h"
+#import "TLFormAllFields.h"
 
 
 /*
@@ -97,8 +97,7 @@ typedef enum {
     TLFormValueTypeBoolean,
     TLFormValueTypeEnumerated,
     TLFormValueTypeList,
-    TLFormValueTypeImage,
-    TLFormValueTypeDate
+    TLFormValueTypeImage
 } TLFormValueType;
 
 
@@ -106,7 +105,7 @@ typedef enum {
 @interface TLPropertyInfo : NSObject 
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, readonly) TLFormFieldType fieldType;
+@property (nonatomic, readonly) Class fieldClass;
 @property (nonatomic, readonly) TLFormFieldInputType inputType;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) TLFormValueType valueType;
@@ -155,54 +154,49 @@ typedef enum {
             
         case TLFormValueTypeSeparator:
             _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeTitle;
+            _fieldClass = [TLFormFieldTitle class];
             break;
             
         case TLFormValueTypeLongText:
             _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeMultiLine;
+            _fieldClass = [TLFormFieldMultiLine class];
             break;
         
         case TLFormValueTypeTitle:
             _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeTitle;
+            _fieldClass = [TLFormFieldTitle class];
             break;
         
         case TLFormValueTypeText:
             _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
             
         case TLFormValueTypeNumber:
             _inputType = TLFormFieldInputTypeNumeric;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeBoolean:
             _inputType = TLFormFieldInputTypeInlineYesNo;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeEnumerated:
-            _fieldType = TLFormFieldTypeSingleLine;
             _inputType = TLFormFieldInputTypeInlineSelect;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeList:
-            _fieldType = TLFormFieldTypeList;
             _inputType = TLFormFieldInputTypeDefault;
+            _fieldClass = [TLFormFieldList class];
             break;
         
         case TLFormValueTypeImage:
-            _fieldType = TLFormFieldTypeImage;
             _inputType = TLFormFieldInputTypeDefault;
+            _fieldClass = [TLFormFieldImage class];
             break;
-        
-        case TLFormValueTypeDate:
-            _fieldType = TLFormFieldTypeSingleLine;
-            _inputType = TLFormFieldInputTypeInlineSelect;
-            break;
-        
+            
         default:
             [NSException raise:@"Invalid form value type" format:@"Raw value: %d", self.valueType];
             break;
@@ -265,7 +259,7 @@ typedef enum {
     id value = nil;
     NSArray *choices;
     
-    if (fieldInfo.fieldType == TLFormFieldTypeTitle)
+    if (fieldInfo.valueType == TLFormValueTypeTitle)
         value = fieldInfo.title;
     else {
         value = [self valueForKey:fieldName];
@@ -277,7 +271,7 @@ typedef enum {
         }
     }
     
-    TLFormField *field = [TLFormField formFieldWithType:fieldInfo.fieldType name:fieldName title:fieldInfo.title andDefaultValue:value];
+    TLFormField *field = [fieldInfo.fieldClass formFieldWithName:fieldName title:fieldInfo.title andDefaultValue:value];
     
     if (choices)
         field.choicesValues = choices;

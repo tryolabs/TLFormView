@@ -86,29 +86,11 @@
 
 #pragma mark - Field Setup
 
-+ (Class)classForFieldType:(TLFormFieldType)fieldType {
-    switch (fieldType) {
-        case TLFormFieldTypeImage:
-            return [TLFormFieldImage class];
-        case TLFormFieldTypeTitle:
-            return [TLFormFieldTitle class];
-        case TLFormFieldTypeSingleLine:
-            return [TLFormFieldSingleLine class];
-        case TLFormFieldTypeMultiLine:
-            return [TLFormFieldMultiLine class];
-        case TLFormFieldTypeList:
-            return [TLFormFieldList class];
-        default:
-            return nil;
-    }
++ (instancetype)formFieldWithName:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
+    return [[self  alloc] initWithName:fieldName title:title andDefaultValue:defaultValue];
 }
 
-+ (id)formFieldWithType:(TLFormFieldType)fieldType name:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
-    Class fieldClass = [self classForFieldType:fieldType];
-    return [[fieldClass alloc] initWithType:fieldType name:fieldName title:title andDefaultValue:defaultValue];
-}
-
-- (id)initWithType:(TLFormFieldType)fieldType name:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
+- (instancetype)initWithName:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
     self = [super init];
     
     self.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
@@ -117,7 +99,6 @@
         self.fieldName = fieldName;
         self.defautValue = defaultValue;
         self.title = title;
-        self.fieldType = fieldType;
         self.translatesAutoresizingMaskIntoConstraints = NO;
         
 #ifdef TLFormViewLayoutDebug

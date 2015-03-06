@@ -12,30 +12,6 @@
 //#define TLFormViewLayoutDebug
 
 
-//Object in this class represent fields in the form. Each field can have one type of:
-
-typedef enum : NSUInteger {
-    //Reprecent an image in the form. Report when the image is tapped throught the form delegate.
-    //Posible values for this type are: UIImage or NSURL pointing to an image
-    TLFormFieldTypeImage,
-    
-    //Title like field. Only one line of text without field name sith big bold text
-    //Posible values for this type are: NSString
-    TLFormFieldTypeTitle,
-    
-    //A single row field. Show the value in a label
-    //Posible values for this type are: NSString
-    TLFormFieldTypeSingleLine,
-    
-    //A multi line text field. Show his value in a UITextView that adjust his size to the content (avoid scrolling)
-    //Posible values for this type are: NSString
-    TLFormFieldTypeMultiLine,
-    
-    //Show his value in a UITableView that adjust his size to the content (avoid scolling)
-    //Posible values for this type are: NSArray of NSString
-    TLFormFieldTypeList
-} TLFormFieldType;
-
 //The TLFormFieldType define how a fild will be showed. The TLFormFieldInputType define how a fild will behave when the form is in edit mode
 
 typedef enum : NSUInteger {
@@ -59,9 +35,6 @@ typedef enum : NSUInteger {
 
 //The field name showed to the user. It's presented in a UILabel
 @property (nonatomic, strong) NSString *title;
-
-//The type of the field
-@property (nonatomic, assign) TLFormFieldType fieldType;
 
 //How the field ascept and show values
 @property (nonatomic, assign) TLFormFieldInputType inputType;
@@ -87,6 +60,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSArray *choicesValues;
 
 //Construct a field with the given parameters. The defaul value is the one that should be visible if no value is returned throuht the TLFormViewDataSource
-+ (id)formFieldWithType:(TLFormFieldType)fieldType name:(NSString *)fieldName title:(NSString *)displayName andDefaultValue:(id)defaultValue;
++ (instancetype)formFieldWithName:(NSString *)fieldName title:(NSString *)displayName andDefaultValue:(id)defaultValue;
 
 @end
