@@ -12,22 +12,6 @@
 //#define TLFormViewLayoutDebug
 
 
-//The TLFormFieldType define how a fild will be showed. The TLFormFieldInputType define how a fild will behave when the form is in edit mode
-
-typedef enum : NSUInteger {
-    //The edition is done using the UITextField / UITextView class with and reported using the delegate
-    TLFormFieldInputTypeDefault,
-    //The keyboard is set to 'number pad' and the layout change to "title - value" with the text field for the value with a maximum of 50 pixels
-    TLFormFieldInputTypeNumeric,
-    //Instead of a UIText* control use a UISwitch
-    TLFormFieldInputTypeInlineYesNo,
-    //Instead of a UIText* control use a UISegmented control (This needs to be fixed to ask the data source for the options to show)
-    TLFormFieldInputTypeInlineSelect,
-    //This mark the field as disable and notify any tap using the form delegate. The controller should take care of the behavior
-    TLFormFieldInputTypeCustom
-} TLFormFieldInputType;
-
-
 @interface TLFormField : UIView
 
 //The field name is used to identify a field in the form. Is never showed to the user.
@@ -35,9 +19,6 @@ typedef enum : NSUInteger {
 
 //The field name showed to the user. It's presented in a UILabel
 @property (nonatomic, strong) NSString *title;
-
-//How the field ascept and show values
-@property (nonatomic, assign) TLFormFieldInputType inputType;
 
 //If not empty show a quesion mark button next to the field title when the form is on edit mode that when taped show a popver with this text
 @property (nonatomic, strong) NSString *helpText;

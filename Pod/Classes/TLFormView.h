@@ -53,8 +53,6 @@
 //omited the calls to 'refreshValues' made to GTFromView will have no effect
 - (id)formView:(TLFormView *)form valueForFieldWithName:(NSString *)fieldName;
 
-- (TLFormFieldInputType)formView:(TLFormView *)form inputTypeForFieldWithName:(NSString *)fieldName;
-
 @required
 
 //Return an array of NSString's corresponding to the 'fieldName' of the TLFormField

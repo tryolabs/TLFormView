@@ -39,7 +39,7 @@ extern int const TLFormFieldValueLabelTag;
 @property (nonatomic, strong) UIColor *highlightColor;
 @property (nonatomic, assign) TLFormBorderStyleMask borderStyle;
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing;
+- (void)setupField:(BOOL)editing;
 - (void)setValue:(id)fieldValue;
 - (id)getValue;
 - (UIView *)titleView;

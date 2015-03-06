@@ -109,8 +109,8 @@ const short kTLNumberNanType        = -2;
     CFNumberType numberType;
 }
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    [super setupFieldWithInputType:inputType forEdit:editing];
+- (void)setupField:(BOOL)editing {
+    [super setupField:editing];
     
     UIView *titleView = [self titleView];
     [self addSubview:titleView];
@@ -120,7 +120,7 @@ const short kTLNumberNanType        = -2;
         //This is needed to properly adjust the title when the text has more than one line
         [titleView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         
-        switch (inputType) {
+        switch (self.inputType) {
                 
             case TLFormFieldInputTypeCustom:
             case TLFormFieldInputTypeNumeric:
@@ -136,7 +136,7 @@ const short kTLNumberNanType        = -2;
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
                 
-                if (inputType == TLFormFieldInputTypeNumeric)
+                if (self.inputType == TLFormFieldInputTypeNumeric)
                     textField.keyboardType = UIKeyboardTypeNumberPad;
                 
                 [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[textField]-sp-|"

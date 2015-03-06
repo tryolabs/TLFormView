@@ -150,25 +150,23 @@ typedef enum {
     
     //Map the value types to field and input types to define de behaviour of each type of value
     
+    _inputType = TLFormFieldInputTypeDefault;
+    
     switch (self.valueType) {
             
         case TLFormValueTypeSeparator:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldTitle class];
             break;
             
         case TLFormValueTypeLongText:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldMultiLine class];
             break;
         
         case TLFormValueTypeTitle:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldTitle class];
             break;
         
         case TLFormValueTypeText:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldSingleLine class];
             break;
             
@@ -188,12 +186,10 @@ typedef enum {
             break;
         
         case TLFormValueTypeList:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldList class];
             break;
         
         case TLFormValueTypeImage:
-            _inputType = TLFormFieldInputTypeDefault;
             _fieldClass = [TLFormFieldImage class];
             break;
             
@@ -273,8 +269,14 @@ typedef enum {
     
     TLFormField *field = [fieldInfo.fieldClass formFieldWithName:fieldName title:fieldInfo.title andDefaultValue:value];
     
-    if (choices)
-        field.choicesValues = choices;
+    //Set the properties specific for the single line field class
+    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSingleLine class]]) {
+        
+        TLFormFieldSingleLine *singleLineField = (TLFormFieldSingleLine *) field;
+        
+        singleLineField.inputType = fieldInfo.inputType;
+        singleLineField.choicesValues = choices;
+    }
     
     return field;
 }
@@ -293,11 +295,6 @@ typedef enum {
         default:
             return value;
     }
-}
-
-- (TLFormFieldInputType)formView:(TLFormView *)form inputTypeForFieldWithName:(NSString *)fieldName {
-    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
-    return fieldInfo.inputType;
 }
 
 - (NSArray *)constraintsFormatForFieldsInForm:(TLFormView *)form {

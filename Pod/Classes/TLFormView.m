@@ -142,14 +142,8 @@
         //for every field name ask for the TLFormField
         TLFormField *field = [self.formDataSource formView:self fieldForName:fieldName];
         
-        //Ask the data source for an input type only if we are editing
-        TLFormFieldInputType inputType = TLFormFieldInputTypeDefault;
-        
-        if (self.editing && [self.formDataSource respondsToSelector:@selector(formView:inputTypeForFieldWithName:)])
-            inputType = [self.formDataSource formView:self inputTypeForFieldWithName:fieldName];
-        
         //Setup the field internal state
-        [field setupFieldWithInputType:inputType forEdit:self.editing];
+        [field setupField:self.editing];
         
         [self addField:field];
     }

@@ -21,8 +21,8 @@
     UITextView *textView;
 }
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    [super setupFieldWithInputType:inputType forEdit:editing];
+- (void)setupField:(BOOL)editing {
+    [super setupField:editing];
     
     titleLabel = [[UILabel alloc] init];
     titleLabel.font = [UIFont systemFontOfSize:15];

@@ -109,6 +109,10 @@
     return self;
 }
 
+- (void)setupField:(BOOL)editing {
+    
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
@@ -157,10 +161,6 @@
     return @{@"sp": @1.0,   //small padding
              @"np": @2.0,   //normal padding
              @"bp": @4.0};  //big padding
-}
-
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    self.inputType = inputType;
 }
 
 #pragma mark - Hidden
