@@ -330,12 +330,12 @@ const short kTLNumberNanType        = -2;
 //UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
     
     BOOL shouleEdit = self.inputType != TLFormFieldInputTypeCustom;
     [textField setShowGlow:shouleEdit withColor:self.highlightColor];
     
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
     
     return shouleEdit;
 }
@@ -362,7 +362,7 @@ const short kTLNumberNanType        = -2;
             newValue = [NSNumber numberOfType:numberType withValue:newValue];
     }
     
-    [self.delegate didChangeValueForField:self newValue:newValue];
+    [self.formDelegate didChangeValueForField:self newValue:newValue];
     
     return YES;
 }
@@ -370,7 +370,7 @@ const short kTLNumberNanType        = -2;
 //UISwitch and UISegmented value change
 
 - (void)controlValueChange {
-    [self.delegate didChangeValueForField:self newValue:[self getValue]];
+    [self.formDelegate didChangeValueForField:self newValue:[self getValue]];
 }
 
 @end

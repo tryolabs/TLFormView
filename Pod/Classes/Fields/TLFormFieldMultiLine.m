@@ -83,7 +83,7 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)_textView {
     [_textView setShowGlow:YES withColor:self.highlightColor];
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)_textView {
@@ -98,7 +98,7 @@
     else
         newValue = [_textView.text substringToIndex:_textView.text.length - 1];
     
-    [self.delegate didChangeValueForField:self newValue:newValue];
+    [self.formDelegate didChangeValueForField:self newValue:newValue];
     return YES;
 }
 

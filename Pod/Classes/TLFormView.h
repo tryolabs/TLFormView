@@ -21,22 +21,8 @@
 
 @optional
 
-//The meaning of 'selected' change acording to the field type:
-// - TLFormFieldTypeImage: the user tap over the image
-// - TLFormFieldTypeTitle: not called
-// - TLFormFieldTypeSingleLine: in edit mode and for fields with TLFormFieldInputType == TLFormFieldInputTypeCustom, called when the user tap over the field
-// - TLFormFieldTypeMultiLine: not called
-// - TLFormFieldTypeList: in edit mode, the user tap the "+" button
+//Called when the field is selected.
 - (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field;
-
-//In edit mode, called when a row is removed from the list. The controler should update the model.
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath;
-
-//In edit mode, called to check if a row could be moved to a different possition in the list.
-- (BOOL)formView:(TLFormView *)form listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
-
-//In edit mode, called when a row is moved from when position to another
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
 
 //In edit mode, called when the user change the value of some field.
 - (void)formView:(TLFormView *)form didChangeValueForField:(TLFormField *)field newValue:(id)value;
@@ -97,9 +83,6 @@
 
 //Set the editing state on all the fields.
 @property (nonatomic, assign) BOOL editing;
-
-//Set the editing state on all the fields and prioritize the default values in the first load
-@property (nonatomic, assign) BOOL editingNew;
 
 //Delegate that recieve a message every time the user interact with a field that's report interaction
 @property (nonatomic, weak) IBOutlet id <TLFormViewDelegate> formDelegate;

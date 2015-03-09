@@ -123,10 +123,14 @@
 }
 
 - (void)plusAction:(id)sender {
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
 }
 
 #pragma mark - UITableViewDataSource
+
+- (BOOL)delegateCanPerformSelector:(SEL)selector {
+    return self.delegate && [self.delegate respondsToSelector:selector];
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return kTLFormFieldListRowHeight;
@@ -151,7 +155,7 @@
     //Invalidate the intrinsic content size so the layout is recalculated. The delay is used to let the animation end before update the layout
     [self performSelector:@selector(invalidateIntrinsicContentSize) withObject:nil afterDelay:0.3];
     
-    [self.delegate listTypeField:self didDeleteRowAtIndexPath:indexPath];
+    [self.delegate listFormField:self didDeleteRowAtIndexPath:indexPath];
 }
 
 - (BOOL)tableView:(UITableView *)_tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -159,11 +163,12 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.delegate listTypeField:self canMoveRowAtIndexPath:indexPath];
+    //If this method is not implemented on the delegate return YES
+    return ![self delegateCanPerformSelector:@selector(listFormField:canMoveRowAtIndexPath:)] || [self.delegate listFormField:self canMoveRowAtIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    [self.delegate listTypeField:self moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+    [self.delegate listFormField:self moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 @end

@@ -130,12 +130,6 @@
     self.form.backgroundColor = [UIColor lightGrayColor];
     
     [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
-    [[TLFormField appearance] setHightlightColor:[UIColor blueColor]];
-    [[TLFormField textFieldAppearance] setBorderStyle:UITextBorderStyleRoundedRect];
-    [[TLFormField segmentedAppearance] setTintColor:[UIColor blueColor]];
-    
-    //Hide the plus button on the list of friends when the form is in edit mode.
-    [[TLFormField addButtonAppearance] setHidden:YES];
 }
 
 - (IBAction)toggleEditionAction:(id)sender {

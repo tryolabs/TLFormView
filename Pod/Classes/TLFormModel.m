@@ -218,6 +218,11 @@ typedef enum {
 
 
 
+@interface TLFormModel () <TLFormFieldListDelegate>
+
+@end
+
+
 @implementation TLFormModel {
     NSMutableArray *propertiesInfo;
     NSArray *propertiesIndex;
@@ -276,6 +281,11 @@ typedef enum {
         
         singleLineField.inputType = fieldInfo.inputType;
         singleLineField.choicesValues = choices;
+        
+    } else if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldList class]]) {
+        
+        TLFormFieldList *listField = (TLFormFieldList *) field;
+        listField.delegate = self;
     }
     
     return field;
@@ -345,17 +355,19 @@ typedef enum {
         [self setValue:value forKey:fieldName];
 }
 
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
+#pragma mark - TLFormFieldListDelegate
+
+- (void)listFormField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *listValue = [[self valueForKey:field.fieldName] mutableCopy];
     [listValue removeObjectAtIndex:indexPath.row];
     [self setValue:listValue forKey:field.fieldName];
 }
 
-- (BOOL)formView:(TLFormView *)form listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)listFormField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+- (void)listFormField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
     NSMutableArray *listValue = [[self valueForKey:field.fieldName] mutableCopy];
     
     id sourceObj = listValue[sourceIndexPath.row];

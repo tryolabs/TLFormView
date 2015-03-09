@@ -84,11 +84,6 @@
     }
 }
 
-- (void)setEditingNew:(BOOL)editingNew {
-    self.editing = editingNew;
-    _editingNew = editingNew;
-}
-
 #pragma mark - TLFormFieldDelegate
 
 - (void)didSelectField:(TLFormField *)field {
@@ -98,23 +93,6 @@
     
     if ([self.formDelegate respondsToSelector:@selector(formView:didSelectField:)])
         [self.formDelegate formView:self didSelectField:field];
-}
-
-- (void)listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:didDeleteRowAtIndexPath:)])
-        [self.formDelegate formView:self listTypeField:field didDeleteRowAtIndexPath:indexPath];
-}
-
-- (BOOL)listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:canMoveRowAtIndexPath:)])
-        return [self.formDelegate formView:self listTypeField:field canMoveRowAtIndexPath:indexPath];
-    else
-        return NO;
-}
-
-- (void)listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:moveRowAtIndexPath:toIndexPath:)])
-        [self.formDelegate formView:self listTypeField:field moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 - (void)didChangeValueForField:(TLFormField *)field newValue:(id)value {
@@ -152,16 +130,13 @@
     NSArray *layout = [self.formDataSource constraintsFormatForFieldsInForm:self];
     [self setupLayoutWithConstraints:layout];
     
-    //This is the main function of the 'editingNew' flag. Avoiding this call force the fields to show their default values
-    if (!self.editingNew) {
-        //Ask the datasource for the actual values to show
-        [self reloadValues];
-    }
+    //Ask the datasource for the actual values to show
+    [self reloadValues];
 }
 
 - (void)addField:(TLFormField *)field {
     //Set ourself as the field delegate
-    field.delegate = self;
+    field.formDelegate = self;
     //update the view-fieldName map
     [viewFieldMap setValue:field forKey:field.fieldName];
     //add the field to the view tree

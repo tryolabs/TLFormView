@@ -172,7 +172,7 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
 }
 
 - (void)imageSelectedAction {
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
 }
 
 @end
