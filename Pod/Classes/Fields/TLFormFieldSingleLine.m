@@ -109,8 +109,8 @@ const short kTLNumberNanType        = -2;
     CFNumberType numberType;
 }
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    [super setupFieldWithInputType:inputType forEdit:editing];
+- (void)setupField:(BOOL)editing {
+    [super setupField:editing];
     
     UIView *titleView = [self titleView];
     [self addSubview:titleView];
@@ -120,7 +120,7 @@ const short kTLNumberNanType        = -2;
         //This is needed to properly adjust the title when the text has more than one line
         [titleView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         
-        switch (inputType) {
+        switch (self.inputType) {
                 
             case TLFormFieldInputTypeCustom:
             case TLFormFieldInputTypeNumeric:
@@ -136,7 +136,7 @@ const short kTLNumberNanType        = -2;
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
                 
-                if (inputType == TLFormFieldInputTypeNumeric)
+                if (self.inputType == TLFormFieldInputTypeNumeric)
                     textField.keyboardType = UIKeyboardTypeNumberPad;
                 
                 [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[textField]-sp-|"
@@ -330,12 +330,12 @@ const short kTLNumberNanType        = -2;
 //UITextFieldDelegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
     
     BOOL shouleEdit = self.inputType != TLFormFieldInputTypeCustom;
     [textField setShowGlow:shouleEdit withColor:self.highlightColor];
     
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
     
     return shouleEdit;
 }
@@ -362,7 +362,7 @@ const short kTLNumberNanType        = -2;
             newValue = [NSNumber numberOfType:numberType withValue:newValue];
     }
     
-    [self.delegate didChangeValueForField:self newValue:newValue];
+    [self.formDelegate didChangeValueForField:self newValue:newValue];
     
     return YES;
 }
@@ -370,7 +370,7 @@ const short kTLNumberNanType        = -2;
 //UISwitch and UISegmented value change
 
 - (void)controlValueChange {
-    [self.delegate didChangeValueForField:self newValue:[self getValue]];
+    [self.formDelegate didChangeValueForField:self newValue:[self getValue]];
 }
 
 @end

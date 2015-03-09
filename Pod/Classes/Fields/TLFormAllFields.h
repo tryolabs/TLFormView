@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Bruno Berisso. All rights reserved.
 //
 
-#import "TLFormField.h"
 #import "TLFormFieldList.h"
 #import "TLFormFieldMultiLine.h"
 #import "TLFormFieldSingleLine.h"

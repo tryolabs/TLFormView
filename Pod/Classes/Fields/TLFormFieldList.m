@@ -10,22 +10,27 @@
 #import "TLFormField+Protected.h"
 
 
+#define kTLFormFieldListRowHeight   44.0
 
-@interface TLFormFieldList () <UITableViewDataSource>
+
+@interface TLFormFieldList () <UITableViewDataSource, UITableViewDelegate>
 
 @end
 
 
 @implementation TLFormFieldList {
-#define kTLFormFieldListRowHeight   44.0
     UILabel *titleLabel;
     UITableView *tableView;
     UIButton *plusButton;
     NSMutableArray *items;
 }
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    [super setupFieldWithInputType:inputType forEdit:editing];
+- (BOOL)delegateCanPerformSelector:(SEL)selector {
+    return self.delegate && [self.delegate respondsToSelector:selector];
+}
+
+- (void)setupField:(BOOL)editing {
+    [super setupField:editing];
     
     titleLabel = [[UILabel alloc] init];
     titleLabel.font = [UIFont systemFontOfSize:15];
@@ -34,7 +39,6 @@
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     titleLabel.text = self.title;
-    titleLabel.tag = 4321;
     [self addSubview:titleLabel];
     
     tableView = [[UITableView alloc] init];
@@ -123,14 +127,17 @@
 }
 
 - (void)plusAction:(id)sender {
-    [self.delegate didSelectField:self];
+    if ([self delegateCanPerformSelector:@selector(listFormFieldAddAction:)])
+        [self.delegate listFormFieldAddAction:self];
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return kTLFormFieldListRowHeight;
 }
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return items.count;
@@ -151,7 +158,7 @@
     //Invalidate the intrinsic content size so the layout is recalculated. The delay is used to let the animation end before update the layout
     [self performSelector:@selector(invalidateIntrinsicContentSize) withObject:nil afterDelay:0.3];
     
-    [self.delegate listTypeField:self didDeleteRowAtIndexPath:indexPath];
+    [self.delegate listFormField:self didDeleteRowAtIndexPath:indexPath];
 }
 
 - (BOOL)tableView:(UITableView *)_tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -159,11 +166,12 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.delegate listTypeField:self canMoveRowAtIndexPath:indexPath];
+    //If this method is not implemented on the delegate return YES
+    return ![self delegateCanPerformSelector:@selector(listFormField:canMoveRowAtIndexPath:)] || [self.delegate listFormField:self canMoveRowAtIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    [self.delegate listTypeField:self moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+    [self.delegate listFormField:self moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
 }
 
 @end

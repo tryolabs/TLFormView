@@ -17,9 +17,6 @@
 @protocol TLFormFieldDelegate <NSObject>
 
 - (void)didSelectField:(TLFormField *)field;
-- (void)listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
 - (void)didChangeValueForField:(TLFormField *)field newValue:(id)value;
 
 @end
@@ -34,12 +31,14 @@ extern int const TLFormFieldValueLabelTag;
 @interface TLFormField ()
 
 @property (nonatomic, strong) id defautValue;
-@property (nonatomic, weak) id <TLFormFieldDelegate> delegate;
+@property (nonatomic, weak) id <TLFormFieldDelegate> formDelegate;
 @property (nonatomic, readonly) NSDictionary *defaultMetrics;
 @property (nonatomic, strong) UIColor *highlightColor;
 @property (nonatomic, assign) TLFormBorderStyleMask borderStyle;
+@property (nonatomic, strong) NSString *title;
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing;
+
+- (void)setupField:(BOOL)editing;
 - (void)setValue:(id)fieldValue;
 - (id)getValue;
 - (UIView *)titleView;

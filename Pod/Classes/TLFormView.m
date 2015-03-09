@@ -84,11 +84,6 @@
     }
 }
 
-- (void)setEditingNew:(BOOL)editingNew {
-    self.editing = editingNew;
-    _editingNew = editingNew;
-}
-
 #pragma mark - TLFormFieldDelegate
 
 - (void)didSelectField:(TLFormField *)field {
@@ -96,25 +91,8 @@
     //Remember the selected field for handling the keyboard
     selectedField = field;
     
-    if ([self.formDelegate respondsToSelector:@selector(formView:didSelecteField:)])
-        [self.formDelegate formView:self didSelecteField:field];
-}
-
-- (void)listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:didDeleteRowAtIndexPath:)])
-        [self.formDelegate formView:self listTypeField:field didDeleteRowAtIndexPath:indexPath];
-}
-
-- (BOOL)listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:canMoveRowAtIndexPath:)])
-        return [self.formDelegate formView:self listTypeField:field canMoveRowAtIndexPath:indexPath];
-    else
-        return NO;
-}
-
-- (void)listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    if ([self.formDelegate respondsToSelector:@selector(formView:listTypeField:moveRowAtIndexPath:toIndexPath:)])
-        [self.formDelegate formView:self listTypeField:field moveRowAtIndexPath:sourceIndexPath toIndexPath:destinationIndexPath];
+    if ([self.formDelegate respondsToSelector:@selector(formView:didSelectField:)])
+        [self.formDelegate formView:self didSelectField:field];
 }
 
 - (void)didChangeValueForField:(TLFormField *)field newValue:(id)value {
@@ -142,14 +120,8 @@
         //for every field name ask for the TLFormField
         TLFormField *field = [self.formDataSource formView:self fieldForName:fieldName];
         
-        //Ask the data source for an input type only if we are editing
-        TLFormFieldInputType inputType = TLFormFieldInputTypeDefault;
-        
-        if (self.editing && [self.formDataSource respondsToSelector:@selector(formView:inputTypeForFieldWithName:)])
-            inputType = [self.formDataSource formView:self inputTypeForFieldWithName:fieldName];
-        
         //Setup the field internal state
-        [field setupFieldWithInputType:inputType forEdit:self.editing];
+        [field setupField:self.editing];
         
         [self addField:field];
     }
@@ -158,16 +130,13 @@
     NSArray *layout = [self.formDataSource constraintsFormatForFieldsInForm:self];
     [self setupLayoutWithConstraints:layout];
     
-    //This is the main function of the 'editingNew' flag. Avoiding this call force the fields to show their default values
-    if (!self.editingNew) {
-        //Ask the datasource for the actual values to show
-        [self reloadValues];
-    }
+    //Ask the datasource for the actual values to show
+    [self reloadValues];
 }
 
 - (void)addField:(TLFormField *)field {
     //Set ourself as the field delegate
-    field.delegate = self;
+    field.formDelegate = self;
     //update the view-fieldName map
     [viewFieldMap setValue:field forKey:field.fieldName];
     //add the field to the view tree

@@ -23,8 +23,8 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
     
 }
 
-- (void)setupFieldWithInputType:(TLFormFieldInputType)inputType forEdit:(BOOL)editing {
-    [super setupFieldWithInputType:inputType forEdit:editing];
+- (void)setupField:(BOOL)editing {
+    [super setupField:editing];
     
     imageView = [[UIImageView alloc] init];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -172,7 +172,7 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
 }
 
 - (void)imageSelectedAction {
-    [self.delegate didSelectField:self];
+    [self.formDelegate didSelectField:self];
 }
 
 @end

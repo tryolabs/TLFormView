@@ -8,29 +8,8 @@
 
 #import "TLFormModel.h"
 #import <objc/runtime.h>
-#import "TLFormField.h"
+#import "TLFormAllFields.h"
 
-
-/*
- String -> String:
- TLFormText
- TLFormLongText
- TLFormTitle
- 
- Number -> Number:
- TLFormNumber
- TLFormBoolean
- 
- Dictionary -> Value:
- TLFormEnumerated
- 
- Array -> Array:
- TLFormList
- 
- (Image or URL) -> File URL:
- TLFormImage
- 
-*/
 
 @implementation TLFormSeparator : NSObject @end
 TLFormSeparator * TLFormSeparatorValue () {
@@ -97,8 +76,7 @@ typedef enum {
     TLFormValueTypeBoolean,
     TLFormValueTypeEnumerated,
     TLFormValueTypeList,
-    TLFormValueTypeImage,
-    TLFormValueTypeDate
+    TLFormValueTypeImage
 } TLFormValueType;
 
 
@@ -106,7 +84,7 @@ typedef enum {
 @interface TLPropertyInfo : NSObject 
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, readonly) TLFormFieldType fieldType;
+@property (nonatomic, readonly) Class fieldClass;
 @property (nonatomic, readonly) TLFormFieldInputType inputType;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) TLFormValueType valueType;
@@ -151,58 +129,49 @@ typedef enum {
     
     //Map the value types to field and input types to define de behaviour of each type of value
     
+    _inputType = TLFormFieldInputTypeDefault;
+    
     switch (self.valueType) {
             
         case TLFormValueTypeSeparator:
-            _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeTitle;
+            _fieldClass = [TLFormFieldTitle class];
             break;
             
         case TLFormValueTypeLongText:
-            _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeMultiLine;
+            _fieldClass = [TLFormFieldMultiLine class];
             break;
         
         case TLFormValueTypeTitle:
-            _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeTitle;
+            _fieldClass = [TLFormFieldTitle class];
             break;
         
         case TLFormValueTypeText:
-            _inputType = TLFormFieldInputTypeDefault;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
             
         case TLFormValueTypeNumber:
             _inputType = TLFormFieldInputTypeNumeric;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeBoolean:
             _inputType = TLFormFieldInputTypeInlineYesNo;
-            _fieldType = TLFormFieldTypeSingleLine;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeEnumerated:
-            _fieldType = TLFormFieldTypeSingleLine;
             _inputType = TLFormFieldInputTypeInlineSelect;
+            _fieldClass = [TLFormFieldSingleLine class];
             break;
         
         case TLFormValueTypeList:
-            _fieldType = TLFormFieldTypeList;
-            _inputType = TLFormFieldInputTypeDefault;
+            _fieldClass = [TLFormFieldList class];
             break;
         
         case TLFormValueTypeImage:
-            _fieldType = TLFormFieldTypeImage;
-            _inputType = TLFormFieldInputTypeDefault;
+            _fieldClass = [TLFormFieldImage class];
             break;
-        
-        case TLFormValueTypeDate:
-            _fieldType = TLFormFieldTypeSingleLine;
-            _inputType = TLFormFieldInputTypeInlineSelect;
-            break;
-        
+            
         default:
             [NSException raise:@"Invalid form value type" format:@"Raw value: %d", self.valueType];
             break;
@@ -226,6 +195,11 @@ typedef enum {
 
 @end
 
+
+
+@interface TLFormModel () <TLFormFieldListDelegate>
+
+@end
 
 
 @implementation TLFormModel {
@@ -265,7 +239,7 @@ typedef enum {
     id value = nil;
     NSArray *choices;
     
-    if (fieldInfo.fieldType == TLFormFieldTypeTitle)
+    if (fieldInfo.valueType == TLFormValueTypeTitle)
         value = fieldInfo.title;
     else {
         value = [self valueForKey:fieldName];
@@ -277,10 +251,21 @@ typedef enum {
         }
     }
     
-    TLFormField *field = [TLFormField formFieldWithType:fieldInfo.fieldType name:fieldName title:fieldInfo.title andDefaultValue:value];
+    TLFormField *field = [fieldInfo.fieldClass formFieldWithName:fieldName title:fieldInfo.title andDefaultValue:value];
     
-    if (choices)
-        field.choicesValues = choices;
+    //Set the properties specific for the single line field class
+    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSingleLine class]]) {
+        
+        TLFormFieldSingleLine *singleLineField = (TLFormFieldSingleLine *) field;
+        
+        singleLineField.inputType = fieldInfo.inputType;
+        singleLineField.choicesValues = choices;
+        
+    } else if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldList class]]) {
+        
+        TLFormFieldList *listField = (TLFormFieldList *) field;
+        listField.delegate = self;
+    }
     
     return field;
 }
@@ -299,11 +284,6 @@ typedef enum {
         default:
             return value;
     }
-}
-
-- (TLFormFieldInputType)formView:(TLFormView *)form inputTypeForFieldWithName:(NSString *)fieldName {
-    TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];
-    return fieldInfo.inputType;
 }
 
 - (NSArray *)constraintsFormatForFieldsInForm:(TLFormView *)form {
@@ -338,7 +318,7 @@ typedef enum {
 
 #pragma mark - TLFormViewDelegate
 
-- (void)formView:(TLFormView *)form didSelecteField:(TLFormField *)field {
+- (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field {
     //Do nothing.
 }
 
@@ -354,17 +334,19 @@ typedef enum {
         [self setValue:value forKey:fieldName];
 }
 
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
+#pragma mark - TLFormFieldListDelegate
+
+- (void)listFormField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableArray *listValue = [[self valueForKey:field.fieldName] mutableCopy];
     [listValue removeObjectAtIndex:indexPath.row];
     [self setValue:listValue forKey:field.fieldName];
 }
 
-- (BOOL)formView:(TLFormView *)form listTypeField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)listFormField:(TLFormField *)field canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 
-- (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+- (void)listFormField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
     NSMutableArray *listValue = [[self valueForKey:field.fieldName] mutableCopy];
     
     id sourceObj = listValue[sourceIndexPath.row];
