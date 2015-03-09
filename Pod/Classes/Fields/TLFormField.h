@@ -18,9 +18,6 @@
 //The field name is used to identify a field in the form. Is never showed to the user.
 @property (nonatomic, strong) NSString *fieldName;
 
-//The field name showed to the user. It's presented in a UILabel
-@property (nonatomic, strong) NSString *title;
-
 //If not empty show a quesion mark button next to the field title when the form is on edit mode that when taped show a popver with this text
 @property (nonatomic, strong) NSString *helpText;
 

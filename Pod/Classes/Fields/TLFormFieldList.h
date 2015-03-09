@@ -22,6 +22,9 @@
 //In edit mode, called when a row is moved from when position to another
 - (void)listFormField:(TLFormField *)field moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath;
 
+//In edit mode, called when the user tap the '+' icon
+- (void)listFormFieldAddAction:(TLFormField *)field;
+
 @end
 
 

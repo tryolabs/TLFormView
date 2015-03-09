@@ -11,27 +11,6 @@
 #import "TLFormAllFields.h"
 
 
-/*
- String -> String:
- TLFormText
- TLFormLongText
- TLFormTitle
- 
- Number -> Number:
- TLFormNumber
- TLFormBoolean
- 
- Dictionary -> Value:
- TLFormEnumerated
- 
- Array -> Array:
- TLFormList
- 
- (Image or URL) -> File URL:
- TLFormImage
- 
-*/
-
 @implementation TLFormSeparator : NSObject @end
 TLFormSeparator * TLFormSeparatorValue () {
     return [TLFormSeparator new];

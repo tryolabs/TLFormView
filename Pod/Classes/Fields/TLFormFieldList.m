@@ -10,18 +10,23 @@
 #import "TLFormField+Protected.h"
 
 
+#define kTLFormFieldListRowHeight   44.0
 
-@interface TLFormFieldList () <UITableViewDataSource>
+
+@interface TLFormFieldList () <UITableViewDataSource, UITableViewDelegate>
 
 @end
 
 
 @implementation TLFormFieldList {
-#define kTLFormFieldListRowHeight   44.0
     UILabel *titleLabel;
     UITableView *tableView;
     UIButton *plusButton;
     NSMutableArray *items;
+}
+
+- (BOOL)delegateCanPerformSelector:(SEL)selector {
+    return self.delegate && [self.delegate respondsToSelector:selector];
 }
 
 - (void)setupField:(BOOL)editing {
@@ -34,7 +39,6 @@
     titleLabel.adjustsFontSizeToFitWidth = YES;
     titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     titleLabel.text = self.title;
-    titleLabel.tag = 4321;
     [self addSubview:titleLabel];
     
     tableView = [[UITableView alloc] init];
@@ -123,18 +127,17 @@
 }
 
 - (void)plusAction:(id)sender {
-    [self.formDelegate didSelectField:self];
+    if ([self delegateCanPerformSelector:@selector(listFormFieldAddAction:)])
+        [self.delegate listFormFieldAddAction:self];
 }
 
-#pragma mark - UITableViewDataSource
-
-- (BOOL)delegateCanPerformSelector:(SEL)selector {
-    return self.delegate && [self.delegate respondsToSelector:selector];
-}
+#pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return kTLFormFieldListRowHeight;
 }
+
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return items.count;
