@@ -329,7 +329,7 @@ typedef enum {
 
 #pragma mark - TLFormViewDelegate
 
-- (void)formView:(TLFormView *)form didSelecteField:(TLFormField *)field {
+- (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field {
     //Do nothing.
 }
 

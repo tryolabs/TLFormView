@@ -27,7 +27,7 @@
 // - TLFormFieldTypeSingleLine: in edit mode and for fields with TLFormFieldInputType == TLFormFieldInputTypeCustom, called when the user tap over the field
 // - TLFormFieldTypeMultiLine: not called
 // - TLFormFieldTypeList: in edit mode, the user tap the "+" button
-- (void)formView:(TLFormView *)form didSelecteField:(TLFormField *)field;
+- (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field;
 
 //In edit mode, called when a row is removed from the list. The controler should update the model.
 - (void)formView:(TLFormView *)form listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath;

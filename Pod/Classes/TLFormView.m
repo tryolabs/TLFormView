@@ -96,8 +96,8 @@
     //Remember the selected field for handling the keyboard
     selectedField = field;
     
-    if ([self.formDelegate respondsToSelector:@selector(formView:didSelecteField:)])
-        [self.formDelegate formView:self didSelecteField:field];
+    if ([self.formDelegate respondsToSelector:@selector(formView:didSelectField:)])
+        [self.formDelegate formView:self didSelectField:field];
 }
 
 - (void)listTypeField:(TLFormField *)field didDeleteRowAtIndexPath:(NSIndexPath *)indexPath {

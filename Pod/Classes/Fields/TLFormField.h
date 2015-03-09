@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 //Uncoment this to color all the subviews to chack any posible layout issues
 //#define TLFormViewLayoutDebug
 
@@ -36,9 +37,6 @@
 //here: https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/AutolayoutPG.pdf - "Auto Layout Degrades Gracefully with Unsatisfiable Constraints"
 //
 @property (nonatomic, strong) NSPredicate *visibilityPredicate;
-
-//The list of values to show in the segmented controll created for the TLFormFieldTypeSingleLine / TLFormFieldInputTypeInlineSelect combination
-@property (nonatomic, strong) NSArray *choicesValues;
 
 //Construct a field with the given parameters. The defaul value is the one that should be visible if no value is returned throuht the TLFormViewDataSource
 + (instancetype)formFieldWithName:(NSString *)fieldName title:(NSString *)displayName andDefaultValue:(id)defaultValue;

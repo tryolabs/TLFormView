@@ -32,4 +32,7 @@ typedef enum : NSUInteger {
 //How the field ascept and show values
 @property (nonatomic, assign) TLFormFieldInputType inputType;
 
+//The list of values to show in the segmented controll created for the LFormFieldInputTypeInlineSelect input type
+@property (nonatomic, strong) NSArray *choicesValues;
+
 @end
