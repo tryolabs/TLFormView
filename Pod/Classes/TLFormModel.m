@@ -114,15 +114,15 @@ typedef enum {
 
 - (TLFormValueType)valueTypeFromString:(NSString *)stringType {
     //A quick way to turn a class name to an enumerated type.
-    return [@[@"TLFormSeparator",
-              @"TLFormText",
-              @"TLFormLongText",
-              @"TLFormTitle",
-              @"TLFormNumber",
-              @"TLFormBoolean",
-              @"TLFormEnumerated",
-              @"TLFormList",
-              @"TLFormImage"] indexOfObject:stringType] + 1;
+    return (TLFormValueType) [@[@"TLFormSeparator",
+                                @"TLFormText",
+                                @"TLFormLongText",
+                                @"TLFormTitle",
+                                @"TLFormNumber",
+                                @"TLFormBoolean",
+                                @"TLFormEnumerated",
+                                @"TLFormList",
+                                @"TLFormImage"] indexOfObject:stringType] + 1;
 }
 
 - (void)setupFieldInfo {
