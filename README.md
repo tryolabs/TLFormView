@@ -291,7 +291,6 @@ There are many things that need improvement, here are some:
 - [ ] Add selection support for list types
 - [ ] Add image picker support (take a photo / choose from album)
 - [ ] Validate with predicate
-- [ ] Addaptative enum values: when the options are more than some ’n’ use a UIPicker instead of a UISegmented
 - [ ] Add support for enum of any type (right now only strings are supported)
 - [ ] Refactor the TLFormView to TLFormViewController so we can automatically handle: choose fotos, add a string to a list, layout for orientation, etc (?)
 
