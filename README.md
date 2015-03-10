@@ -183,8 +183,9 @@ Our previous example could be writed with ``TLFormModel`` like this if we choose
 @implementation UserModel @end
 ```
 
-That's it. That is almost the same that we implemente in the previous example except for the iPad layout. Now to conect the ``TLFormModel`` to the form we need to set it as delegate and datasource of the form.
+That's it. This will produce a vertical layout like the one we get on iPhone on all the platforms. Now to conect the ``TLFormModel`` to the form we need to set it as delegate and datasource of the form to use ``TLFoemModel``:
 
+```objective-c
 ...
 
 //At some point in some place...
@@ -202,7 +203,7 @@ form.formDataSource = formUserModel;
 form.formDelegate = formUserModel;
 ```
 
-This will produce a vertical layout like the one we get on iPhone on all the platforms. To add our not-iPhone layout we need to override the implementation of ``constraintsFormatForFieldsInForm:`` provided by ``TLFormModel`` like this:
+To add our not-iPhone layout we need to override the implementation of ``constraintsFormatForFieldsInForm:`` provided by ``TLFormModel`` like this:
 
 ```objective-c
 @implementation UserModel
