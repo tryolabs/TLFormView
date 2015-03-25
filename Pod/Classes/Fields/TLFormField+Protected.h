@@ -34,7 +34,6 @@ extern int const TLFormFieldValueLabelTag;
 @property (nonatomic, weak) id <TLFormFieldDelegate> formDelegate;
 @property (nonatomic, readonly) NSDictionary *defaultMetrics;
 @property (nonatomic, strong) UIColor *highlightColor;
-@property (nonatomic, assign) TLFormBorderStyleMask borderStyle;
 @property (nonatomic, strong) NSString *title;
 
 

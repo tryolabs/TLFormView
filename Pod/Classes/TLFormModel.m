@@ -267,6 +267,20 @@ typedef enum {
         listField.delegate = self;
     }
     
+    //Find out what borders must be used
+    NSUInteger fieldIdx = [propertiesIndex indexOfObject:fieldName];
+    if (fieldIdx < propertiesIndex.count - 1) {
+        fieldIdx++;
+        
+        TLPropertyInfo *nextField = propertiesInfo[fieldIdx];
+        
+        if (nextField.valueType != TLFormValueTypeTitle && nextField.valueType != TLFormValueTypeSeparator)
+            field.borderStyle = TLFormFieldBorderTop;
+        else
+            field.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
+    } else
+        field.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
+    
     return field;
 }
 

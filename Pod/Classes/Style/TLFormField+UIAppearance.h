@@ -9,18 +9,6 @@
 #import "TLFormField.h"
 
 
-typedef enum {
-    TLFormFieldBorderNone   = 0,
-    TLFormFieldBorderTop    = 1 << 0,
-    TLFormFieldBorderRight  = 1 << 1,
-    TLFormFieldBorderBotom  = 1 << 2,
-    TLFormFieldBorderLeft   = 1 << 3,
-    TLFormFieldBorderAll    = 255
-} TLFormFieldBorder;
-
-typedef char TLFormBorderStyleMask;
-
-
 @interface TLFormField (UIAppearance)
 
 - (void)setTitleFont:(UIFont *)font UI_APPEARANCE_SELECTOR;

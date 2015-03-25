@@ -40,6 +40,10 @@
     else if ([fieldName isEqualToString:@"hobbies"])
         field.visibilityPredicate = [NSPredicate predicateWithFormat:@"$is_active.value == YES"];
     
+    //Set all the borders when we are running on iPad
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
+        field.borderStyle = TLFormFieldBorderAll;
+    
     return field;
 }
 
@@ -96,7 +100,7 @@
 
 
 
-@interface ViewController () <TLFormViewDelegate>
+@interface ViewController ()
 @property (weak, nonatomic) IBOutlet TLFormView *form;
 @end
 
@@ -127,7 +131,7 @@
     
     //Make some visual tweaks
     self.form.margin = 0.0;
-    self.form.backgroundColor = [UIColor lightGrayColor];
+    self.form.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:244/255.0 alpha:1.0];
     
     [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
 }

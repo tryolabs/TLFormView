@@ -130,6 +130,7 @@ const short kTLNumberNanType        = -2;
                 textField.tag = TLFormFieldValueLabelTag;
                 textField.textAlignment = NSTextAlignmentRight;
                 textField.translatesAutoresizingMaskIntoConstraints = NO;
+                textField.borderStyle = UITextBorderStyleRoundedRect;
                 textField.delegate = self;
                 
                 [self addSubview:textField];
@@ -197,16 +198,31 @@ const short kTLNumberNanType        = -2;
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[yesNoSelect]-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
+                
+                //The vertical constraints needs to be set with explicit contraints because the visual format language can't express this rules.
+                [self addConstraints:@[
+                                       [NSLayoutConstraint constraintWithItem:yesNoSelect
+                                                                    attribute:NSLayoutAttributeCenterY
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self
+                                                                    attribute:NSLayoutAttributeCenterY
+                                                                   multiplier:1.0 constant:0.0],
+                                       [NSLayoutConstraint constraintWithItem:titleView
+                                                                    attribute:NSLayoutAttributeCenterY
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self
+                                                                    attribute:NSLayoutAttributeCenterY
+                                                                   multiplier:1.0 constant:0.0],
+                ]];
+                
+                
+                
+                
                 break;
             }
             default:
                 break;
         }
-        
         
     } else {
         
@@ -224,7 +240,7 @@ const short kTLNumberNanType        = -2;
         [valueLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         
         NSDictionary *views = NSDictionaryOfVariableBindings(titleView, valueLabel);
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-bp-[valueLabel]-np-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-[valueLabel]-bp-|"
                                                                      options:NSLayoutFormatAlignAllCenterY
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];

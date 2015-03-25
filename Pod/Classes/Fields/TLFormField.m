@@ -93,7 +93,7 @@
 - (instancetype)initWithName:(NSString *)fieldName title:(NSString *)title andDefaultValue:(id)defaultValue {
     self = [super init];
     
-    self.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
+    self.borderStyle = TLFormFieldBorderNone;
     
     if (self) {
         self.fieldName = fieldName;
@@ -122,29 +122,29 @@
         CGSize size = CGRectIntegral(self.bounds).size;
         
         if (self.borderStyle & TLFormFieldBorderTop) {
-            [path moveToPoint:CGPointZero];
-            [path addLineToPoint:CGPointMake(size.width, 0)];
+            [path moveToPoint:CGPointMake(0, 0.5)];
+            [path addLineToPoint:CGPointMake(size.width, 0.5)];
         }
         
         if (self.borderStyle & TLFormFieldBorderRight) {
-            [path moveToPoint:CGPointMake(size.width, 0)];
-            [path addLineToPoint:CGPointMake(size.width, size.height)];
+            [path moveToPoint:CGPointMake(size.width - 0.5, 0.5)];
+            [path addLineToPoint:CGPointMake(size.width - 0.5, size.height - 0.5)];
         }
         
         if (self.borderStyle & TLFormFieldBorderBotom) {
-            [path moveToPoint:CGPointMake(size.width, size.height)];
-            [path addLineToPoint:CGPointMake(0, size.height)];
+            [path moveToPoint:CGPointMake(size.width - 0.5, size.height - 0.5)];
+            [path addLineToPoint:CGPointMake(0.5, size.height - 0.5)];
         }
         
         if (self.borderStyle & TLFormFieldBorderLeft) {
-            [path moveToPoint:CGPointMake(0, size.height)];
-            [path addLineToPoint:CGPointZero];
+            [path moveToPoint:CGPointMake(0.5, size.height - 0.5)];
+            [path addLineToPoint:CGPointMake(0, 0.5)];
         }
         
         CAShapeLayer *border = [CAShapeLayer layer];
         border.name = @"TLFomFieldBorderLayer";
         border.path = path.CGPath;
-        border.strokeColor = [[UIColor blackColor] CGColor];
+        border.strokeColor = [[UIColor colorWithRed:203/255.0 green:203/255.0 blue:207/255.0 alpha:1.0] CGColor];
         
         for (CALayer *layer in self.layer.sublayers) {
             if ([layer.name isEqualToString:@"TLFomFieldBorderLayer"]) {
@@ -158,9 +158,9 @@
 }
 
 - (NSDictionary *)defaultMetrics {
-    return @{@"sp": @1.0,   //small padding
-             @"np": @2.0,   //normal padding
-             @"bp": @4.0};  //big padding
+    return @{@"sp": @2.0,    //small padding
+             @"np": @8.0,    //normal padding
+             @"bp": @12.0};  //big padding
 }
 
 #pragma mark - Hidden

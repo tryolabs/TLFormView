@@ -9,6 +9,18 @@
 #import <UIKit/UIKit.h>
 
 
+typedef enum {
+    TLFormFieldBorderNone   = 0,
+    TLFormFieldBorderTop    = 1 << 0,
+    TLFormFieldBorderRight  = 1 << 1,
+    TLFormFieldBorderBotom  = 1 << 2,
+    TLFormFieldBorderLeft   = 1 << 3,
+    TLFormFieldBorderAll    = 255
+} TLFormFieldBorder;
+
+typedef char TLFormBorderStyleMask;
+
+
 //Uncoment this to color all the subviews to chack any posible layout issues
 //#define TLFormViewLayoutDebug
 
@@ -24,6 +36,9 @@
 
 ///If not empty show a quesion mark button next to the field title when the form is on edit mode that when taped show a popver with this text
 @property (nonatomic, strong) NSString *helpText;
+
+///Mask that tells which borders should be draw
+@property (nonatomic, assign) TLFormBorderStyleMask borderStyle;
 
 /**
  @abstract Predicate used to determine the visibility of this field.
