@@ -127,18 +127,18 @@
         }
         
         if (self.borderStyle & TLFormFieldBorderRight) {
-            [path moveToPoint:CGPointMake(size.width - 0.5, 0.5)];
-            [path addLineToPoint:CGPointMake(size.width - 0.5, size.height - 0.5)];
+            [path moveToPoint:CGPointMake(size.width + 0.5, 0.5)];
+            [path addLineToPoint:CGPointMake(size.width + 0.5, size.height + 0.5)];
         }
         
-        if (self.borderStyle & TLFormFieldBorderBotom) {
-            [path moveToPoint:CGPointMake(size.width - 0.5, size.height - 0.5)];
-            [path addLineToPoint:CGPointMake(0.5, size.height - 0.5)];
+        if (self.borderStyle & TLFormFieldBorderBottom) {
+            [path moveToPoint:CGPointMake(size.width + 0.5, size.height + 0.5)];
+            [path addLineToPoint:CGPointMake(0.5, size.height + 0.5)];
         }
         
         if (self.borderStyle & TLFormFieldBorderLeft) {
-            [path moveToPoint:CGPointMake(0.5, size.height - 0.5)];
-            [path addLineToPoint:CGPointMake(0, 0.5)];
+            [path moveToPoint:CGPointMake(0.5, size.height)];
+            [path addLineToPoint:CGPointMake(0.5, 0.5)];
         }
         
         CAShapeLayer *border = [CAShapeLayer layer];

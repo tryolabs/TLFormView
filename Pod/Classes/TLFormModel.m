@@ -68,7 +68,8 @@ TLFormImage * TLFormImageValue (NSObject *urlOrImage) {
 
 
 typedef enum {
-    TLFormValueTypeSeparator = 1,
+    TLFormValueTypeUnknow = 0,
+    TLFormValueTypeSeparator,
     TLFormValueTypeText,
     TLFormValueTypeLongText,
     TLFormValueTypeTitle,
@@ -97,32 +98,50 @@ typedef enum {
 
 + (instancetype)withObjcProperty:(objc_property_t)property {
     
-    TLPropertyInfo *pi = [[TLPropertyInfo alloc] init];
-    
-    pi.name = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-    
+    TLPropertyInfo *pi = nil;
     //Example value: T@"PROPERTY_TYPE",&,N,V_avatar
     NSString *propertyType = [NSString stringWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
-    propertyType = [propertyType substringFromIndex:3];
-    propertyType = [propertyType substringToIndex:[propertyType rangeOfString:@"\""].location];
     
-    pi->_valueType = [pi valueTypeFromString:propertyType];
-    [pi setupFieldInfo];
+    //Parse the property type string to get the class
+    if (propertyType.length > 4) {
+        
+        propertyType = [propertyType substringFromIndex:3];
+        NSUInteger rightQuoteIdx = [propertyType rangeOfString:@"\""].location;
+        
+        if (rightQuoteIdx != NSNotFound) {
+            propertyType = [propertyType substringToIndex:rightQuoteIdx];
+            
+            TLFormValueType valueType = [TLPropertyInfo valueTypeFromString:propertyType];
+            if (valueType != TLFormValueTypeUnknow) {
+                
+                pi = [[TLPropertyInfo alloc] init];
+                pi.name = [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+                pi->_valueType = valueType;
+                [pi setupFieldInfo];
+            }
+        }
+    }
     
     return pi;
 }
 
-- (TLFormValueType)valueTypeFromString:(NSString *)stringType {
++ (TLFormValueType)valueTypeFromString:(NSString *)stringType {
     //A quick way to turn a class name to an enumerated type.
-    return (TLFormValueType) [@[@"TLFormSeparator",
-                                @"TLFormText",
-                                @"TLFormLongText",
-                                @"TLFormTitle",
-                                @"TLFormNumber",
-                                @"TLFormBoolean",
-                                @"TLFormEnumerated",
-                                @"TLFormList",
-                                @"TLFormImage"] indexOfObject:stringType] + 1;
+    
+    NSUInteger idx = [@[@"TLFormSeparator",
+                        @"TLFormText",
+                        @"TLFormLongText",
+                        @"TLFormTitle",
+                        @"TLFormNumber",
+                        @"TLFormBoolean",
+                        @"TLFormEnumerated",
+                        @"TLFormList",
+                        @"TLFormImage"] indexOfObject:stringType];
+    
+    if (idx != NSNotFound)
+        return (TLFormValueType) idx + 1;
+    else
+        return TLFormValueTypeUnknow;
 }
 
 - (void)setupFieldInfo {
@@ -222,8 +241,12 @@ typedef enum {
     propertiesInfo = [NSMutableArray arrayWithCapacity:count];
     
     for (int i = 0; i < count; i++ ) {
+        
         objc_property_t property = properties[i];
-        [propertiesInfo addObject:[TLPropertyInfo withObjcProperty:property]];
+        TLPropertyInfo *propertyInfo = [TLPropertyInfo withObjcProperty:property];
+        
+        if (propertyInfo)
+            [propertiesInfo addObject:propertyInfo];
     }
     
     free(properties);
@@ -267,19 +290,8 @@ typedef enum {
         listField.delegate = self;
     }
     
-    //Find out what borders must be used
-    NSUInteger fieldIdx = [propertiesIndex indexOfObject:fieldName];
-    if (fieldIdx < propertiesIndex.count - 1) {
-        fieldIdx++;
-        
-        TLPropertyInfo *nextField = propertiesInfo[fieldIdx];
-        
-        if (nextField.valueType != TLFormValueTypeTitle && nextField.valueType != TLFormValueTypeSeparator)
-            field.borderStyle = TLFormFieldBorderTop;
-        else
-            field.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
-    } else
-        field.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBotom;
+    //Set the top and bottom borders
+    field.borderStyle = TLFormFieldBorderTop | TLFormFieldBorderBottom;
     
     return field;
 }

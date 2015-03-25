@@ -54,6 +54,9 @@
     [defaultCenter addObserver:self selector:@selector(handleKeyboardHide:) name:UIKeyboardDidHideNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(orientationChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
+    //Dismiss the keyboard on scroll
+    self.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    
     //NOTE: this is commented because it breaks some layouts. It seams to be working fine because it not affect the subviews.
     //Avoid translate the posible autoresizing mask values to constraints
 //    self.translatesAutoresizingMaskIntoConstraints = NO;
