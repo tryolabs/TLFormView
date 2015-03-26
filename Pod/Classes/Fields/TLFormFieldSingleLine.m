@@ -117,8 +117,8 @@ const short kTLNumberNanType        = -2;
     
     if (editing) {
         
-        //This is needed to properly adjust the title when the text has more than one line
-        [titleView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+        UILabel *titleLabel = (UILabel *) [titleView viewWithTag:TLFormFieldTitleLabelTag];
+        titleLabel.textColor = [UIColor grayColor];
         
         switch (self.inputType) {
                 
@@ -130,29 +130,23 @@ const short kTLNumberNanType        = -2;
                 textField.tag = TLFormFieldValueLabelTag;
                 textField.textAlignment = NSTextAlignmentRight;
                 textField.translatesAutoresizingMaskIntoConstraints = NO;
-                textField.borderStyle = UITextBorderStyleRoundedRect;
+                textField.borderStyle = UITextBorderStyleNone;
                 textField.delegate = self;
-                
                 [self addSubview:textField];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
                 
                 if (self.inputType == TLFormFieldInputTypeNumeric)
                     textField.keyboardType = UIKeyboardTypeNumberPad;
                 
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[textField]-sp-|"
+                NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
+                
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
                                                                              options:NSLayoutFormatAlignAllCenterX
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-np-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-np-[textField]-bp-|"
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[textField]-np-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                
                 break;
             }
                 
@@ -169,15 +163,15 @@ const short kTLNumberNanType        = -2;
                 [self addSubview:segmented];
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, segmented);
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[titleView]-3.0-[segmented]-3.0-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[segmented]-np-|"
                                                                              options:NSLayoutFormatAlignAllCenterX
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-np-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-|"
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[segmented]-np-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[segmented]-bp-|"
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
@@ -194,7 +188,7 @@ const short kTLNumberNanType        = -2;
                 [self addSubview:yesNoSelect];
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, yesNoSelect);
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleView]-bp-[yesNoSelect]-bp-|"
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-[yesNoSelect]-bp-|"
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
@@ -347,17 +341,7 @@ const short kTLNumberNanType        = -2;
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self.formDelegate didSelectField:self];
-    
-    BOOL shouleEdit = self.inputType != TLFormFieldInputTypeCustom;
-    [textField setShowGlow:shouleEdit withColor:self.highlightColor];
-    
-    [self.formDelegate didSelectField:self];
-    
-    return shouleEdit;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    [textField setShowGlow:NO withColor:self.highlightColor];
+    return self.inputType != TLFormFieldInputTypeCustom;;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

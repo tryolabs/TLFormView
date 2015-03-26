@@ -203,6 +203,8 @@
     title.translatesAutoresizingMaskIntoConstraints = NO;
     title.text = self.title;
     title.tag = TLFormFieldTitleLabelTag;
+    //Set the huggin priprity to make room for the field.
+    [title setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
     
     if (self.helpText) {
         UIButton *showHelpButton = [[UIButton alloc] init];

@@ -53,12 +53,6 @@ int const TLFormFieldValueLabelTag = 42002;
     [[self valueLabel] setBackgroundColor:color];
 }
 
-#pragma mark - HightLight
-
-- (void)setHightlightColor:(UIColor *)color {
-    self.highlightColor = color;
-}
-
 #pragma mark - Border Style
 
 - (void)setBorderStyleMask:(TLFormBorderStyleMask)borderMask {

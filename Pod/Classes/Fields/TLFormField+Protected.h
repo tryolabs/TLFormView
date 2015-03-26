@@ -8,7 +8,6 @@
 
 #import "TLFormField.h"
 #import "TLFormField+UIAppearance.h"
-#import "UIView+Glow.h"
 
 
 
@@ -33,7 +32,6 @@ extern int const TLFormFieldValueLabelTag;
 @property (nonatomic, strong) id defautValue;
 @property (nonatomic, weak) id <TLFormFieldDelegate> formDelegate;
 @property (nonatomic, readonly) NSDictionary *defaultMetrics;
-@property (nonatomic, strong) UIColor *highlightColor;
 @property (nonatomic, strong) NSString *title;
 
 

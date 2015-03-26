@@ -42,6 +42,9 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
         UIView *title = [self titleView];
         [self addSubview:title];
         
+        UILabel *titleLabel = (UILabel *) [title viewWithTag:TLFormFieldTitleLabelTag];
+        titleLabel.textColor = [UIColor grayColor];
+        
         //Set the vertical hugging priority to "requiered" so the title label allways take the minimum space requiered
         [title setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
         

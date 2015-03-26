@@ -32,14 +32,12 @@
 - (void)setupField:(BOOL)editing {
     [super setupField:editing];
     
-    titleLabel = [[UILabel alloc] init];
-    titleLabel.font = [UIFont systemFontOfSize:15];
-    titleLabel.numberOfLines = 1;
-    titleLabel.textAlignment = NSTextAlignmentLeft;
-    titleLabel.adjustsFontSizeToFitWidth = YES;
-    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    titleLabel.text = self.title;
-    [self addSubview:titleLabel];
+    UIView *titleView = [self titleView];
+    [self addSubview:titleView];
+    
+    titleLabel = (UILabel *) [self viewWithTag:TLFormFieldTitleLabelTag];
+    if (editing)
+        titleLabel.textColor = [UIColor grayColor];
     
     tableView = [[UITableView alloc] init];
     tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -64,9 +62,9 @@
         
         [self addSubview:plusButton];
         
-        views = NSDictionaryOfVariableBindings(titleLabel, tableView, plusButton);
+        views = NSDictionaryOfVariableBindings(titleView, tableView, plusButton);
         
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleLabel]-[plusButton]-bp-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-[plusButton]-bp-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
@@ -78,19 +76,19 @@
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[titleLabel][tableView]-sp-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[titleView][tableView]-sp-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
         
         //Set the compresson and hugging priorities for the title and the button so it behave correctly with long text
-        [titleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+        [titleView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         [plusButton setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
         
     } else {
-        views = NSDictionaryOfVariableBindings(titleLabel, tableView);
+        views = NSDictionaryOfVariableBindings(titleView, tableView);
         
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-np-[titleLabel]-np-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
@@ -98,7 +96,7 @@
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[titleLabel][tableView]-np-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-np-[titleView][tableView]-np-|"
                                                                      options:0
                                                                      metrics:self.defaultMetrics
                                                                        views:views]];

@@ -19,8 +19,6 @@
 - (void)setValueTextColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
 - (void)setValueBackgroundColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
 
-- (void)setHightlightColor:(UIColor *)color UI_APPEARANCE_SELECTOR;
-
 - (void)setBorderStyleMask:(TLFormBorderStyleMask)borderMask UI_APPEARANCE_SELECTOR;
 
 
