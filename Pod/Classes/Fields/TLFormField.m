@@ -100,6 +100,7 @@
         self.defautValue = defaultValue;
         self.title = title;
         self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.backgroundColor = [UIColor whiteColor];
         
 #ifdef TLFormViewLayoutDebug
         self.backgroundColor = [UIColor colorWithRed:(rand() % 255)/255.0 green:(rand() % 255)/255.0 blue:(rand() % 255)/255.0 alpha:1.0];

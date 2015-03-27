@@ -21,6 +21,7 @@
     BOOL needsReload;
     TLFormField *selectedField;
     UIEdgeInsets defaultInsets;
+    id <TLFormViewModel> formModel;
 }
 
 #pragma mark Initialization
@@ -57,10 +58,6 @@
     //Dismiss the keyboard on scroll
     self.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     
-    //NOTE: this is commented because it breaks some layouts. It seams to be working fine because it not affect the subviews.
-    //Avoid translate the posible autoresizing mask values to constraints
-//    self.translatesAutoresizingMaskIntoConstraints = NO;
-    
     //This view is used to control how the fields are layed out inside the form. We need to do it this way because of how the scroll view
     //manage their content and how the scroll is implemented. (See: http://developer.apple.com/library/ios/#releasenotes/General/RN-iOSSDK-6_0/index.html
     //and http://www.g8production.com/post/57513133020/auto-layout-with-uiscrollview-how-to-use )
@@ -69,7 +66,7 @@
     containerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:containerView];
 
-    //The default margin is 20.0 this value looks better on iPhone
+    //Set the margin to a default value
     self.margin = 8.0;
     
 #ifdef TLFormViewLayoutDebug
@@ -87,7 +84,19 @@
     }
 }
 
+- (void)setFormDataSource:(id<TLFormViewDataSource>)formDataSource {
+    if (formModel)
+        [NSException raise:@"Inconsisten form setup" format:@"A previous data source was set with a form model (setFromModel:). Can't decide which one should prevail."];
+    else
+        _formDataSource = formDataSource;
+}
+
 #pragma mark - TLFormFieldDelegate
+
+- (void)setFormModel:(id<TLFormViewModel>)model {
+    self.formDataSource = model;
+    formModel = model;
+}
 
 - (void)didSelectField:(TLFormField *)field {
     
@@ -96,11 +105,17 @@
     
     if ([self.formDelegate respondsToSelector:@selector(formView:didSelectField:)])
         [self.formDelegate formView:self didSelectField:field];
+    
+    if ([formModel respondsToSelector:@selector(formView:didSelectField:)])
+            [formModel formView:self didSelectField:field];
 }
 
 - (void)didChangeValueForField:(TLFormField *)field newValue:(id)value {
     if ([self.formDelegate respondsToSelector:@selector(formView:didChangeValueForField:newValue:)])
         [self.formDelegate formView:self didChangeValueForField:field newValue:value];
+    
+    if ([formModel respondsToSelector:@selector(formView:didChangeValueForField:newValue:)])
+        [formModel formView:self didChangeValueForField:field newValue:value];
     
     [self updateFieldsVisibility];
 }

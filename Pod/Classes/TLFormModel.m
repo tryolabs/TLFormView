@@ -344,10 +344,6 @@ typedef enum {
 
 #pragma mark - TLFormViewDelegate
 
-- (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field {
-    //Do nothing.
-}
-
 - (void)formView:(TLFormView *)form didChangeValueForField:(TLFormField *)field newValue:(id)value {
     NSString *fieldName = field.fieldName;
     TLPropertyInfo *fieldInfo = [self infoFormFieldWithName:fieldName];

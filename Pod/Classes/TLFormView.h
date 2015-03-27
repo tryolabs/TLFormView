@@ -92,6 +92,16 @@
 
 @end
 
+/************************************************************************************************************************************************/
+/**************************************************************  TLFormViewModel  ***************************************************************/
+/************************************************************************************************************************************************/
+
+/**
+ @abstract The form model interface
+ @discussion Describe the iterface that an object must implement to be set as a form model with 'setFormModel:' method of TLFormView.
+ */
+@protocol TLFormViewModel <TLFormViewDataSource, TLFormViewDelegate>
+@end
 
 /************************************************************************************************************************************************/
 /****************************************************************  TLFormView  ******************************************************************/
@@ -121,6 +131,18 @@
 @property (nonatomic, weak) IBOutlet UIView *header;
 ///Footer to show in the form
 @property (nonatomic, weak) IBOutlet UIView *footer;
+
+/**
+ @abstract Set the form model
+ @discussion Set an object to act as the form model. A form model is an object that will be set as the *unique* data source and a *shadow* delegate. 
+ 
+ Being a *unique* data source means that when this mehod is call any previous object set as data source will be forgot and any try to set it affter will throw an exception.
+ 
+ A *shadow* delegate means that other delegate can be set and the messages will be send to both objects, the form model and any other object.
+ 
+ @param model An object conforming to the TLFormViewModel protocol
+ */
+- (void)setFormModel:(id <TLFormViewModel>)model;
 
 /**
  @abstract Setup the form.

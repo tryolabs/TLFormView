@@ -100,7 +100,7 @@
 
 
 
-@interface ViewController ()
+@interface ViewController () <TLFormViewDelegate>
 @property (weak, nonatomic) IBOutlet TLFormView *form;
 @end
 
@@ -113,6 +113,20 @@
     
     //Create and setup the object that describe the form.
     user = [[UserModel alloc] init];
+    [self setupFormValues];
+    
+    //Set the model
+    [self.form setFormModel:user];
+    
+    //Make some visual tweaks
+    self.form.margin = 0.0;
+    self.form.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:244/255.0 alpha:1.0];
+    
+    //Show the edit button
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)setupFormValues {
     user.name = TLFormTextValue(@"John Doe");
     user.age = TLFormNumberValue(@42);
     user.is_active = TLFormBooleanValue(YES);
@@ -124,21 +138,26 @@
     
     NSURL *url = [NSURL URLWithString:@"https://s-media-cache-ak0.pinimg.com/custom_covers/216x146/413557246971119139_1385652535.jpg"];
     user.avatar = TLFormImageValue(url);
-    
-    //Set the model as data source and delegate of the form.
-    self.form.formDataSource = user;
-    self.form.formDelegate = user;
-    
-    //Make some visual tweaks
-    self.form.margin = 0.0;
-    self.form.backgroundColor = [UIColor colorWithRed:239/255.0 green:239/255.0 blue:244/255.0 alpha:1.0];
-    
-    [[TLFormField appearance] setBackgroundColor:[UIColor whiteColor]];
 }
 
-- (IBAction)toggleEditionAction:(id)sender {
-    self.form.editing = !self.form.editing;
+#pragma mark - Bar Buttons Actions
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    
+    if (editing) {
+        UIBarButtonItem *undo = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemUndo target:self action:@selector(undoAction:)];
+        self.navigationItem.leftBarButtonItem = undo;
+    } else
+        self.navigationItem.leftBarButtonItem = nil;
+    
+    self.form.editing = editing;
     [self.form setupFields];
+}
+
+- (void)undoAction:(id)sender {
+    [self setupFormValues];
+    [self setEditing:NO animated:YES];
 }
 
 @end

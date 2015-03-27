@@ -49,6 +49,6 @@ TLFormImage * TLFormImageValue (NSObject *urlOrImage);
  @abstract Model a form using an object.
  @discussion This class is intended for subclassing. It infer the implementation of 'TLFormViewDataSource' from his own properties and the 'TLFormViewDelegate' imlementation mantains the property values in synch.
  */
-@interface TLFormModel : NSObject <TLFormViewDataSource, TLFormViewDelegate>
+@interface TLFormModel : NSObject <TLFormViewModel>
 
 @end
