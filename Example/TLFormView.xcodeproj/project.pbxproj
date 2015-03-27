@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B5B54FF1AC4F0D900604DE2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B54FE1AC4F0D900604DE2 /* MobileCoreServices.framework */; };
 		9BECE1881A9B5B4D00CE2FD5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1871A9B5B4D00CE2FD5 /* main.m */; };
 		9BECE18B1A9B5B4D00CE2FD5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE18A1A9B5B4D00CE2FD5 /* AppDelegate.m */; };
 		9BECE18E1A9B5B4D00CE2FD5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE18D1A9B5B4D00CE2FD5 /* ViewController.m */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B5B54FE1AC4F0D900604DE2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		9BECE1821A9B5B4D00CE2FD5 /* TLFormView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TLFormView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BECE1861A9B5B4D00CE2FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BECE1871A9B5B4D00CE2FD5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B5B54FF1AC4F0D900604DE2 /* MobileCoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +74,7 @@
 		9BECE1791A9B5B4D00CE2FD5 = {
 			isa = PBXGroup;
 			children = (
+				9B5B54FE1AC4F0D900604DE2 /* MobileCoreServices.framework */,
 				9BECE1841A9B5B4D00CE2FD5 /* TLFormView */,
 				9BECE1831A9B5B4D00CE2FD5 /* Products */,
 			);

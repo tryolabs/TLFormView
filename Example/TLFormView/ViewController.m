@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "TLFormView.h"
 #import "TLFormModel.h"
-#import "TLFormField+UIAppearance.h"
+#import <MobileCoreServices/UTCoreTypes.h>
 
 
 @interface UserModel : TLFormModel
@@ -100,7 +100,7 @@
 
 
 
-@interface ViewController () <TLFormViewDelegate>
+@interface ViewController () <TLFormViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (weak, nonatomic) IBOutlet TLFormView *form;
 @end
 
@@ -158,6 +158,86 @@
 - (void)undoAction:(id)sender {
     [self setupFormValues];
     [self setEditing:NO animated:YES];
+}
+
+#pragma mark - TLFormViewDelegate
+
+- (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field {
+    //The field name is the same that the property name set in the UserModel class
+    if (self.editing && [field.fieldName isEqualToString:@"avatar"]) {
+        UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"cancel"
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:@"camera", @"photo library", nil];
+        [popup showInView:self.view];
+    }
+}
+
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch (buttonIndex) {
+        case 0:
+            [self performSelector:@selector(useCamera) withObject:nil afterDelay:0.1];
+            break;
+        case 1:
+            [self performSelector:@selector(useCameraRoll) withObject:nil afterDelay:0.1];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)useCamera {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = NO;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }
+}
+
+
+- (void)useCameraRoll {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {
+        
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = NO;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+    }
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    NSString *mediaType = info[UIImagePickerControllerMediaType];
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        
+        UIImage *newImage = info[UIImagePickerControllerOriginalImage];
+        
+        //If there is no ref url the image need to be saved
+        NSURL *refUrl = info[UIImagePickerControllerReferenceURL];
+        if (!refUrl)
+            UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+        
+        user.avatar = TLFormImageValue(newImage);
+        [self.form reloadValues];
+    }
 }
 
 @end

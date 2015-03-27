@@ -17,6 +17,7 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
 
 @implementation TLFormFieldImage {
     UIImageView *imageView;
+    NSLayoutConstraint *imageViewHeight;
     //The reference used to store the image (get/set)value
     id imageRefValue;
     NSURLSessionDownloadTask *imageDownloadTask;
@@ -30,6 +31,13 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
     imageView.contentMode = UIViewContentModeScaleAspectFit;
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:imageView];
+    
+    imageViewHeight = [NSLayoutConstraint constraintWithItem:imageView
+                                                   attribute:NSLayoutAttributeHeight
+                                                   relatedBy:0
+                                                      toItem:nil
+                                                   attribute:NSLayoutAttributeNotAnAttribute
+                                                  multiplier:1.0 constant:0];
     
     UIButton *tapRecognizer = [[UIButton alloc] init];
     tapRecognizer.translatesAutoresizingMaskIntoConstraints = NO;
@@ -104,15 +112,40 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
     [self setValue:self.defautValue];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    //If the image is too big the "scale to aspect fit" scale the image in one dimention but not the other. This fix the case where the image fit the width but not the height.
+    //TODO: Add the same logic for the width is trivial, the thing is how this affect all the possible layouts. This may need other approach
+    if (imageView.image) {
+        UIImage *image = imageView.image;
+        CGFloat multiplier = (CGRectGetWidth(imageView.bounds) / image.size.width);
+        CGFloat scaledHeight = multiplier * image.size.height;
+        
+        [self removeConstraint:imageViewHeight];
+        
+        if (scaledHeight < imageView.bounds.size.height) {
+            [imageViewHeight setConstant:scaledHeight];
+            [self addConstraint:imageViewHeight];
+        }
+    }
+}
+
 - (void)setValue:(id)fieldValue {
     
     imageRefValue = fieldValue;
     
+    //Update the image and invalidate the layout
+    void (^updateImage)(UIImage *) = ^(UIImage *newImage) {
+        imageView.image = newImage;
+        [imageView setNeedsLayout];
+    };
+    
     if (!fieldValue)
-        imageView.image = [UIImage imageNamed:TLFormFieldNoImageName];
+        updateImage([UIImage imageNamed:TLFormFieldNoImageName]);
     
     else if ([fieldValue isKindOfClass:[UIImage class]])
-        imageView.image = fieldValue;
+        updateImage(fieldValue);
     
     //If the value is an URL
     else if ([fieldValue isKindOfClass:[NSURL class]]) {
@@ -157,8 +190,7 @@ NSString * const TLFormFieldNoImageName = @"tlformfieldnoimage.png";
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [spinner removeFromSuperview];
-                imageView.image = image;
-                [imageView setNeedsLayout];
+                updateImage(image);
             });
             
         };
