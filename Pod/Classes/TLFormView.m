@@ -75,6 +75,11 @@
 #endif
 }
 
+- (void)dealloc {
+    //Remove from notification center on dealloc
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     

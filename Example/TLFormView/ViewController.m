@@ -165,6 +165,9 @@
 - (void)formView:(TLFormView *)form didSelectField:(TLFormField *)field {
     //The field name is the same that the property name set in the UserModel class
     if (self.editing && [field.fieldName isEqualToString:@"avatar"]) {
+        
+        [self.view endEditing:YES];
+        
         UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:nil
                                                            delegate:self
                                                   cancelButtonTitle:@"cancel"
