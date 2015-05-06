@@ -237,7 +237,8 @@
 
 - (void)showHelpAction:(UIButton *)sender {
     popover = [[UIPopoverController alloc] initWithContentViewController:[HelpTooltipPopoverControler helpTooltipControllerWithText:self.helpText]];
-    [popover presentPopoverFromRect:sender.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    CGRect finalFrame = [self convertRect:sender.frame fromView:sender.superview];
+    [popover presentPopoverFromRect:finalFrame inView:self permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 @end
