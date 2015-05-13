@@ -27,63 +27,24 @@
         UILabel *titleLabel = (UILabel *) [titleView viewWithTag:TLFormFieldTitleLabelTag];
         titleLabel.textColor = [UIColor grayColor];
         
-        switch (self.inputType) {
-                
-            case TLFormFieldInputTypeCustom:
-            case TLFormFieldInputTypeDefault: {
-                
-                UITextField *textField = [[UITextField alloc] init];
-                textField.tag = TLFormFieldValueLabelTag;
-                textField.textAlignment = NSTextAlignmentRight;
-                textField.translatesAutoresizingMaskIntoConstraints = NO;
-                textField.borderStyle = UITextBorderStyleNone;
-                textField.delegate = self;
-                [self addSubview:textField];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
-                
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
-                                                                             options:NSLayoutFormatAlignAllCenterX
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-np-[textField]-bp-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                break;
-            }
-                
-            case TLFormFieldInputTypeInlineSelect: {
-                
-                UISegmentedControl *segmented = [[UISegmentedControl alloc] init];
-                segmented.tag = TLFormFieldValueLabelTag;
-                segmented.translatesAutoresizingMaskIntoConstraints = NO;
-                [segmented addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
-                
-                for (NSString *choice in self.choicesValues)
-                    [segmented insertSegmentWithTitle:choice atIndex:[self.choicesValues indexOfObject:choice] animated:NO];
-                
-                [self addSubview:segmented];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(titleView, segmented);
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-[segmented]-np-|"
-                                                                             options:NSLayoutFormatAlignAllCenterX
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[segmented]-bp-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                break;
-            }
-            default:
-                break;
-        }
+        UITextField *textField = [[UITextField alloc] init];
+        textField.tag = TLFormFieldValueLabelTag;
+        textField.textAlignment = NSTextAlignmentRight;
+        textField.translatesAutoresizingMaskIntoConstraints = NO;
+        textField.borderStyle = UITextBorderStyleNone;
+        textField.delegate = self;
+        [self addSubview:textField];
         
+        NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
+        
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
+                                                                     options:NSLayoutFormatAlignAllCenterX
+                                                                     metrics:self.defaultMetrics
+                                                                       views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-np-[textField]-bp-|"
+                                                                     options:NSLayoutFormatAlignAllCenterY
+                                                                     metrics:self.defaultMetrics
+                                                                       views:views]];
     } else {
         
         UILabel *valueLabel = [[UILabel alloc] init];

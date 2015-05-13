@@ -183,8 +183,7 @@ typedef enum {
             break;
         
         case TLFormValueTypeEnumerated:
-            _inputType = TLFormFieldInputTypeInlineSelect;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldSelect class];
             break;
         
         case TLFormValueTypeList:
@@ -285,11 +284,9 @@ typedef enum {
     TLFormField *field = [fieldInfo.fieldClass formFieldWithName:fieldName title:fieldInfo.title andDefaultValue:value];
     
     //Set the properties specific for the single line field class
-    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSingleLine class]]) {
+    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSelect class]]) {
         
-        TLFormFieldSingleLine *singleLineField = (TLFormFieldSingleLine *) field;
-        
-        singleLineField.inputType = fieldInfo.inputType;
+        TLFormFieldSelect *singleLineField = (TLFormFieldSelect *) field;
         singleLineField.choicesValues = choices;
         
     } else if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldList class]]) {

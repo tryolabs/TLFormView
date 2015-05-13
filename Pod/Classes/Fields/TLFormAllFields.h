@@ -11,6 +11,7 @@
 #import "TLFormFieldSingleLine.h"
 #import "TLFormFieldNumeric.h"
 #import "TLFormFieldYesNo.h"
+#import "TLFormFieldSelect.h"
 #import "TLFormFieldTitle.h"
 #import "TLFormFieldImage.h"
 #import "TLFormFieldDateTime.h"

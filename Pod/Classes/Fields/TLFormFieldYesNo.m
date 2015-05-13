@@ -33,20 +33,18 @@
                                                                        views:views]];
         
         //The vertical constraints needs to be set with explicit contraints because the visual format language can't express this rules.
-        [self addConstraints:@[
-                               [NSLayoutConstraint constraintWithItem:yesNoSelect
-                                                            attribute:NSLayoutAttributeCenterY
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:self
-                                                            attribute:NSLayoutAttributeCenterY
-                                                           multiplier:1.0 constant:0.0],
-                               [NSLayoutConstraint constraintWithItem:titleView
-                                                            attribute:NSLayoutAttributeCenterY
-                                                            relatedBy:NSLayoutRelationEqual
-                                                               toItem:self
-                                                            attribute:NSLayoutAttributeCenterY
-                                                           multiplier:1.0 constant:0.0],
-                               ]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:yesNoSelect
+                                                         attribute:NSLayoutAttributeCenterY
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterY
+                                                        multiplier:1.0 constant:0.0]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:titleView
+                                                         attribute:NSLayoutAttributeCenterY
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterY
+                                                        multiplier:1.0 constant:0.0]];
     }
 }
 
