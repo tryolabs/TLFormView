@@ -14,38 +14,35 @@
     UISwitch *yesNoSelect;
 }
 
-- (void)setupField:(BOOL)editing {
-    [super setupField:editing];
+- (void)setupFieldForEditing {
     
-    if (editing) {
-        yesNoSelect = [[UISwitch alloc] init];
-        yesNoSelect.tag = TLFormFieldValueLabelTag;
-        yesNoSelect.translatesAutoresizingMaskIntoConstraints = NO;
-        [yesNoSelect addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
-        
-        [self addSubview:yesNoSelect];
-        
-        UIView *titleView = [self titleView];
-        NSDictionary *views = NSDictionaryOfVariableBindings(titleView, yesNoSelect);
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-[yesNoSelect]-bp-|"
-                                                                     options:NSLayoutFormatAlignAllCenterY
-                                                                     metrics:self.defaultMetrics
-                                                                       views:views]];
-        
-        //The vertical constraints needs to be set with explicit contraints because the visual format language can't express this rules.
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:yesNoSelect
-                                                         attribute:NSLayoutAttributeCenterY
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:self
-                                                         attribute:NSLayoutAttributeCenterY
-                                                        multiplier:1.0 constant:0.0]];
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:titleView
-                                                         attribute:NSLayoutAttributeCenterY
-                                                         relatedBy:NSLayoutRelationEqual
-                                                            toItem:self
-                                                         attribute:NSLayoutAttributeCenterY
-                                                        multiplier:1.0 constant:0.0]];
-    }
+    yesNoSelect = [[UISwitch alloc] init];
+    yesNoSelect.tag = TLFormFieldValueLabelTag;
+    yesNoSelect.translatesAutoresizingMaskIntoConstraints = NO;
+    [yesNoSelect addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
+    
+    [self addSubview:yesNoSelect];
+    
+    UIView *titleView = [self titleView];
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleView, yesNoSelect);
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-[yesNoSelect]-bp-|"
+                                                                 options:NSLayoutFormatAlignAllCenterY
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+    
+    //The vertical constraints needs to be set with explicit contraints because the visual format language can't express this rules.
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:yesNoSelect
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0 constant:0.0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:titleView
+                                                     attribute:NSLayoutAttributeCenterY
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeCenterY
+                                                    multiplier:1.0 constant:0.0]];
 }
 
 //Get and Set value
@@ -73,6 +70,8 @@
     else
         return @([self.textField.text boolValue]);
 }
+
+//UISwitch value change
 
 - (void)controlValueChange {
     [self.formDelegate didChangeValueForField:self newValue:[self getValue]];

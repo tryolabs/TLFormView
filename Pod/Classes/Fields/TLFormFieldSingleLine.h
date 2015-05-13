@@ -17,5 +17,6 @@
 @interface TLFormFieldSingleLine (Protected)
 
 @property (nonatomic, readonly) UITextField *textField;
+- (void)setupFieldForEditing;
 
 @end

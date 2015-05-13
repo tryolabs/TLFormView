@@ -91,7 +91,6 @@ typedef enum {
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, readonly) Class fieldClass;
-@property (nonatomic, readonly) TLFormFieldInputType inputType;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) TLFormValueType valueType;
 
@@ -153,8 +152,6 @@ typedef enum {
 - (void)setupFieldInfo {
     
     //Map the value types to field and input types to define de behaviour of each type of value
-    
-    _inputType = TLFormFieldInputTypeDefault;
     
     switch (self.valueType) {
             

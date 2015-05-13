@@ -15,11 +15,9 @@
     CFNumberType numberType;
 }
 
-- (void)setupField:(BOOL)editing {
-    [super setupField:editing];
-    
-    if (editing)
-        self.textField.keyboardType = UIKeyboardTypeNumberPad;
+- (void)setupFieldForEditing {
+    [super setupFieldForEditing];
+    self.textField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 //Get and Set value

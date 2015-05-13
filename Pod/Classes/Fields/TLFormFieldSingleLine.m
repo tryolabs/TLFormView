@@ -26,25 +26,8 @@
         
         UILabel *titleLabel = (UILabel *) [titleView viewWithTag:TLFormFieldTitleLabelTag];
         titleLabel.textColor = [UIColor grayColor];
+        [self setupFieldForEditing];
         
-        UITextField *textField = [[UITextField alloc] init];
-        textField.tag = TLFormFieldValueLabelTag;
-        textField.textAlignment = NSTextAlignmentRight;
-        textField.translatesAutoresizingMaskIntoConstraints = NO;
-        textField.borderStyle = UITextBorderStyleNone;
-        textField.delegate = self;
-        [self addSubview:textField];
-        
-        NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
-        
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
-                                                                     options:NSLayoutFormatAlignAllCenterX
-                                                                     metrics:self.defaultMetrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-np-[textField]-bp-|"
-                                                                     options:NSLayoutFormatAlignAllCenterY
-                                                                     metrics:self.defaultMetrics
-                                                                       views:views]];
     } else {
         
         UILabel *valueLabel = [[UILabel alloc] init];
@@ -78,6 +61,29 @@
     [self setValue:self.defautValue];
 }
 
+- (void)setupFieldForEditing {
+    
+    UITextField *textField = [[UITextField alloc] init];
+    textField.tag = TLFormFieldValueLabelTag;
+    textField.textAlignment = NSTextAlignmentRight;
+    textField.translatesAutoresizingMaskIntoConstraints = NO;
+    textField.borderStyle = UITextBorderStyleNone;
+    textField.delegate = self;
+    [self addSubview:textField];
+    
+    UIView *titleView = [self titleView];
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-sp-[titleView]-sp-|"
+                                                                 options:NSLayoutFormatAlignAllCenterX
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-np-[textField]-bp-|"
+                                                                 options:NSLayoutFormatAlignAllCenterY
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+}
+
 - (CGSize)intrinsicContentSize {
     CGFloat width = 0.0, height = 0.0;
     
@@ -108,17 +114,6 @@
     
     if ([valueView respondsToSelector:@selector(setText:)])
         [valueView performSelector:@selector(setText:) withObject:stringValue];
-    
-    else if ([valueView isKindOfClass:[UISegmentedControl class]]) {
-        UISegmentedControl *segmented = (UISegmentedControl *)valueView;
-        
-        for (int i = 0; i < [segmented numberOfSegments]; i++) {
-            if ([stringValue isEqualToString:[segmented titleForSegmentAtIndex:i]]) {
-                segmented.selectedSegmentIndex = i;
-                break;
-            }
-        }
-    }
 }
 
 - (id)getValue {
@@ -128,12 +123,6 @@
         NSString *stringValue = [valueView performSelector:@selector(text)];
         return stringValue;
     }
-    
-    else if ([valueView isKindOfClass:[UISegmentedControl class]]) {
-        UISegmentedControl *segmented = (UISegmentedControl *)valueView;
-        return [segmented titleForSegmentAtIndex:segmented.selectedSegmentIndex];
-    }
-    
     return nil;
 }
 
@@ -141,7 +130,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self.formDelegate didSelectField:self];
-    return self.inputType != TLFormFieldInputTypeCustom;
+    return YES;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -156,12 +145,6 @@
     [self.formDelegate didChangeValueForField:self newValue:newValue];
     
     return YES;
-}
-
-//UISwitch and UISegmented value change
-
-- (void)controlValueChange {
-    [self.formDelegate didChangeValueForField:self newValue:[self getValue]];
 }
 
 @end
