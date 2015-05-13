@@ -10,6 +10,7 @@
 #import "TLFormFieldMultiLine.h"
 #import "TLFormFieldSingleLine.h"
 #import "TLFormFieldNumeric.h"
+#import "TLFormFieldYesNo.h"
 #import "TLFormFieldTitle.h"
 #import "TLFormFieldImage.h"
 #import "TLFormFieldDateTime.h"

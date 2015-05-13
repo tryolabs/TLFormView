@@ -179,8 +179,7 @@ typedef enum {
             break;
         
         case TLFormValueTypeBoolean:
-            _inputType = TLFormFieldInputTypeInlineYesNo;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldYesNo class];
             break;
         
         case TLFormValueTypeEnumerated:

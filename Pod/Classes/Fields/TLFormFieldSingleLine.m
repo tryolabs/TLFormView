@@ -8,16 +8,13 @@
 
 #import "TLFormFieldSingleLine.h"
 #import "TLFormField+Protected.h"
-#import "NSNumber+NumberType.h"
 
 
 @interface TLFormFieldSingleLine () <UITextFieldDelegate>
 @end
 
 
-@implementation TLFormFieldSingleLine {
-    CFNumberType numberType;
-}
+@implementation TLFormFieldSingleLine
 
 - (void)setupField:(BOOL)editing {
     [super setupField:editing];
@@ -33,7 +30,6 @@
         switch (self.inputType) {
                 
             case TLFormFieldInputTypeCustom:
-            case TLFormFieldInputTypeNumeric:
             case TLFormFieldInputTypeDefault: {
                 
                 UITextField *textField = [[UITextField alloc] init];
@@ -43,9 +39,6 @@
                 textField.borderStyle = UITextBorderStyleNone;
                 textField.delegate = self;
                 [self addSubview:textField];
-                
-                if (self.inputType == TLFormFieldInputTypeNumeric)
-                    textField.keyboardType = UIKeyboardTypeNumberPad;
                 
                 NSDictionary *views = NSDictionaryOfVariableBindings(titleView, textField);
                 
@@ -85,40 +78,6 @@
                                                                              options:NSLayoutFormatAlignAllCenterY
                                                                              metrics:self.defaultMetrics
                                                                                views:views]];
-                break;
-            }
-                
-            case TLFormFieldInputTypeInlineYesNo: {
-                
-                UISwitch *yesNoSelect = [[UISwitch alloc] init];
-                yesNoSelect.tag = TLFormFieldValueLabelTag;
-                yesNoSelect.translatesAutoresizingMaskIntoConstraints = NO;
-                [yesNoSelect addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
-                
-                [self addSubview:yesNoSelect];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(titleView, yesNoSelect);
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-bp-[titleView]-bp-[yesNoSelect]-bp-|"
-                                                                             options:NSLayoutFormatAlignAllCenterY
-                                                                             metrics:self.defaultMetrics
-                                                                               views:views]];
-                
-                //The vertical constraints needs to be set with explicit contraints because the visual format language can't express this rules.
-                [self addConstraints:@[
-                                       [NSLayoutConstraint constraintWithItem:yesNoSelect
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                   multiplier:1.0 constant:0.0],
-                                       [NSLayoutConstraint constraintWithItem:titleView
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self
-                                                                    attribute:NSLayoutAttributeCenterY
-                                                                   multiplier:1.0 constant:0.0],
-                ]];
-                
                 break;
             }
             default:
@@ -178,18 +137,9 @@
         return;
     
     NSString *stringValue;
-    if ([fieldValue isKindOfClass:[NSString class]] == NO) {
-        
-        if ([fieldValue isKindOfClass:[NSNumber class]])
-            numberType = [(NSNumber *) fieldValue numberType];
-        else
-            numberType = kTLNumberNanType;
-        
-        if (numberType == kTLNumberBooleanType)
-            stringValue = [fieldValue boolValue] ? @"Yes" : @"No";
-        else
-            stringValue = [fieldValue stringValue];
-    } else
+    if ([fieldValue isKindOfClass:[NSString class]] == NO)
+        stringValue = [fieldValue stringValue];
+    else
         stringValue = fieldValue;
     
     
@@ -208,11 +158,6 @@
             }
         }
     }
-    
-    else if ([valueView isKindOfClass:[UISwitch class]]) {
-        UISwitch *yesNoSelect = (UISwitch *)valueView;
-        yesNoSelect.on = [fieldValue boolValue];
-    }
 }
 
 - (id)getValue {
@@ -220,25 +165,12 @@
     
     if ([valueView respondsToSelector:@selector(text)]) {
         NSString *stringValue = [valueView performSelector:@selector(text)];
-        
-        if (numberType == kTLNumberBooleanType)
-            return @([stringValue boolValue]);
-        
-        else if (numberType != kTLNumberNanType)
-            return [NSNumber numberOfType:numberType withValue:stringValue];
-            
-        else
-            return stringValue;
+        return stringValue;
     }
     
     else if ([valueView isKindOfClass:[UISegmentedControl class]]) {
         UISegmentedControl *segmented = (UISegmentedControl *)valueView;
         return [segmented titleForSegmentAtIndex:segmented.selectedSegmentIndex];
-    }
-    
-    else if ([valueView isKindOfClass:[UISwitch class]]) {
-        UISwitch *yesNoSelect = (UISwitch *)valueView;
-        return @(yesNoSelect.on);
     }
     
     return nil;
@@ -248,7 +180,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     [self.formDelegate didSelectField:self];
-    return self.inputType != TLFormFieldInputTypeCustom;;
+    return self.inputType != TLFormFieldInputTypeCustom;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -259,15 +191,6 @@
         newValue = [textField.text stringByAppendingString:string];
     else
         newValue = [textField.text substringToIndex:textField.text.length - 1];
-    
-    //If the input type is numeric translate the value to an NSNumber in the same domain as the one given to the fild as initial value
-    if (self.inputType == TLFormFieldInputTypeNumeric) {
-        if (numberType == kTLNumberBooleanType)
-            newValue = @([newValue boolValue]);
-        
-        else if (numberType != kTLNumberNanType)
-            newValue = [NSNumber numberOfType:numberType withValue:newValue];
-    }
     
     [self.formDelegate didChangeValueForField:self newValue:newValue];
     

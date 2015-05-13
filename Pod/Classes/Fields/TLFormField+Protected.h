@@ -33,11 +33,9 @@ extern int const TLFormFieldValueLabelTag;
 @property (nonatomic, weak) id <TLFormFieldDelegate> formDelegate;
 @property (nonatomic, readonly) NSDictionary *defaultMetrics;
 @property (nonatomic, strong) NSString *title;
-
+@property (nonatomic, strong, setter = setValue: , getter = getValue) id fieldValue;
 
 - (void)setupField:(BOOL)editing;
-- (void)setValue:(id)fieldValue;
-- (id)getValue;
 - (UIView *)titleView;
 
 @end
