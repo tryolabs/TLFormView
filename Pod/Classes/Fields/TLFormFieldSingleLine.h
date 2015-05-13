@@ -36,3 +36,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSArray *choicesValues;
 
 @end
+
+
+
+@interface TLFormFieldSingleLine (Protected)
+
+@property (nonatomic, readonly) UITextField *textField;
+
+@end

@@ -23,6 +23,7 @@
 @property (nonatomic, strong) TLFormSeparator *separator;
 @property (nonatomic, strong) TLFormLongText *_description;
 @property (nonatomic, strong) TLFormList *friends;
+@property (nonatomic, strong) TLFormDateTime *date;
 
 @end
 
@@ -138,6 +139,8 @@
     
     NSURL *url = [NSURL URLWithString:@"https://s-media-cache-ak0.pinimg.com/custom_covers/216x146/413557246971119139_1385652535.jpg"];
     user.avatar = TLFormImageValue(url);
+    
+    user.date = TLFormDateTimeValue([NSDate date]);
 }
 
 #pragma mark - Bar Buttons Actions

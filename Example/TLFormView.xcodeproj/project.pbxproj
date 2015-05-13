@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		9B5B54FF1AC4F0D900604DE2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5B54FE1AC4F0D900604DE2 /* MobileCoreServices.framework */; };
+		9BE9B0EE1B02562E009DA0BD /* TLFormFieldDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE9B0ED1B02562E009DA0BD /* TLFormFieldDateTime.m */; };
+		9BE9B0F11B03A81B009DA0BD /* TLFormFieldNumeric.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE9B0F01B03A81B009DA0BD /* TLFormFieldNumeric.m */; };
+		9BE9B0F51B03BD13009DA0BD /* NSNumber+NumberType.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE9B0F41B03BD13009DA0BD /* NSNumber+NumberType.m */; };
 		9BECE1881A9B5B4D00CE2FD5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE1871A9B5B4D00CE2FD5 /* main.m */; };
 		9BECE18B1A9B5B4D00CE2FD5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE18A1A9B5B4D00CE2FD5 /* AppDelegate.m */; };
 		9BECE18E1A9B5B4D00CE2FD5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BECE18D1A9B5B4D00CE2FD5 /* ViewController.m */; };
@@ -27,6 +30,12 @@
 
 /* Begin PBXFileReference section */
 		9B5B54FE1AC4F0D900604DE2 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		9BE9B0EC1B02562E009DA0BD /* TLFormFieldDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLFormFieldDateTime.h; sourceTree = "<group>"; };
+		9BE9B0ED1B02562E009DA0BD /* TLFormFieldDateTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLFormFieldDateTime.m; sourceTree = "<group>"; };
+		9BE9B0EF1B03A81B009DA0BD /* TLFormFieldNumeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLFormFieldNumeric.h; sourceTree = "<group>"; };
+		9BE9B0F01B03A81B009DA0BD /* TLFormFieldNumeric.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLFormFieldNumeric.m; sourceTree = "<group>"; };
+		9BE9B0F31B03BD13009DA0BD /* NSNumber+NumberType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+NumberType.h"; sourceTree = "<group>"; };
+		9BE9B0F41B03BD13009DA0BD /* NSNumber+NumberType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+NumberType.m"; sourceTree = "<group>"; };
 		9BECE1821A9B5B4D00CE2FD5 /* TLFormView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TLFormView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BECE1861A9B5B4D00CE2FD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BECE1871A9B5B4D00CE2FD5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -71,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9BE9B0F21B03BCF3009DA0BD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9BE9B0F31B03BD13009DA0BD /* NSNumber+NumberType.h */,
+				9BE9B0F41B03BD13009DA0BD /* NSNumber+NumberType.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		9BECE1791A9B5B4D00CE2FD5 = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +134,7 @@
 		9BECE1AB1A9B5B9800CE2FD5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9BE9B0F21B03BCF3009DA0BD /* Extensions */,
 				9BECE1CF1A9F898900CE2FD5 /* Style */,
 				9BECE1B11A9CACEA00CE2FD5 /* Fields */,
 				9BECE1AD1A9B5B9800CE2FD5 /* TLFormView.h */,
@@ -144,6 +163,10 @@
 				9BECE1C21A9CBBD100CE2FD5 /* TLFormFieldImage.h */,
 				9BECE1C31A9CBBD100CE2FD5 /* TLFormFieldImage.m */,
 				9BECE1D31A9F89E200CE2FD5 /* TLFormAllFields.h */,
+				9BE9B0EC1B02562E009DA0BD /* TLFormFieldDateTime.h */,
+				9BE9B0ED1B02562E009DA0BD /* TLFormFieldDateTime.m */,
+				9BE9B0EF1B03A81B009DA0BD /* TLFormFieldNumeric.h */,
+				9BE9B0F01B03A81B009DA0BD /* TLFormFieldNumeric.m */,
 			);
 			path = Fields;
 			sourceTree = "<group>";
@@ -229,10 +252,13 @@
 			files = (
 				9BECE18E1A9B5B4D00CE2FD5 /* ViewController.m in Sources */,
 				9BECE1D21A9F899500CE2FD5 /* TLFormField+UIAppearance.m in Sources */,
+				9BE9B0F11B03A81B009DA0BD /* TLFormFieldNumeric.m in Sources */,
 				9BECE18B1A9B5B4D00CE2FD5 /* AppDelegate.m in Sources */,
 				9BECE1B81A9CB6DD00CE2FD5 /* TLFormFieldList.m in Sources */,
 				9BECE1B01A9B5B9800CE2FD5 /* TLFormView.m in Sources */,
+				9BE9B0F51B03BD13009DA0BD /* NSNumber+NumberType.m in Sources */,
 				9BECE1C41A9CBBD100CE2FD5 /* TLFormFieldImage.m in Sources */,
+				9BE9B0EE1B02562E009DA0BD /* TLFormFieldDateTime.m in Sources */,
 				9BECE1BE1A9CBAEC00CE2FD5 /* TLFormFieldSingleLine.m in Sources */,
 				9BECE1881A9B5B4D00CE2FD5 /* main.m in Sources */,
 				9BECE1C11A9CBB8B00CE2FD5 /* TLFormFieldTitle.m in Sources */,

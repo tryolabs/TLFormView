@@ -65,6 +65,10 @@ TLFormImage * TLFormImageValue (NSObject *urlOrImage) {
     }
 }
 
+@implementation TLFormDateTime : NSDate @end
+TLFormDateTime * TLFormDateTimeValue (NSDate *date) {
+    return (TLFormDateTime *) [date copy];
+}
 
 
 typedef enum {
@@ -77,7 +81,8 @@ typedef enum {
     TLFormValueTypeBoolean,
     TLFormValueTypeEnumerated,
     TLFormValueTypeList,
-    TLFormValueTypeImage
+    TLFormValueTypeImage,
+    TLFormValueTypeDateTime
 } TLFormValueType;
 
 
@@ -136,7 +141,8 @@ typedef enum {
                         @"TLFormBoolean",
                         @"TLFormEnumerated",
                         @"TLFormList",
-                        @"TLFormImage"] indexOfObject:stringType];
+                        @"TLFormImage",
+                        @"TLFormDateTime"] indexOfObject:stringType];
     
     if (idx != NSNotFound)
         return (TLFormValueType) idx + 1;
@@ -169,8 +175,7 @@ typedef enum {
             break;
             
         case TLFormValueTypeNumber:
-            _inputType = TLFormFieldInputTypeNumeric;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldNumeric class];
             break;
         
         case TLFormValueTypeBoolean:
@@ -189,6 +194,10 @@ typedef enum {
         
         case TLFormValueTypeImage:
             _fieldClass = [TLFormFieldImage class];
+            break;
+        
+        case TLFormValueTypeDateTime:
+            _fieldClass = [TLFormFieldDateTime class];
             break;
             
         default:
