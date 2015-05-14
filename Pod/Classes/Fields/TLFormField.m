@@ -80,6 +80,7 @@
 //The base class for the form fields
 
 @implementation TLFormField {
+    UIView *_titleView;
     NSLayoutConstraint *hiddenConstraint;
     UIPopoverController *popover;
 }
@@ -198,6 +199,9 @@
 
 - (UIView *)titleView {
     
+    if (_titleView)
+        return _titleView;
+    
     UILabel *title = [[UILabel alloc] init];
     title.numberOfLines = 2;
     title.lineBreakMode = NSLineBreakByWordWrapping;
@@ -230,9 +234,11 @@
                                                                                options:NSLayoutFormatAlignAllCenterX
                                                                                metrics:nil
                                                                                  views:views]];
-        return titleContainer;
+        _titleView = titleContainer;
     } else
-        return title;
+        _titleView = title;
+    
+    return _titleView;
 }
 
 - (void)showHelpAction:(UIButton *)sender {

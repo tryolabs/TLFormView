@@ -44,6 +44,8 @@ TLFormList * TLFormListValue(NSArray *array);
 @interface TLFormImage : NSObject @end
 TLFormImage * TLFormImageValue (NSObject *urlOrImage);
 
+@interface TLFormDateTime : NSDate @end
+TLFormDateTime * TLFormDateTimeValue (NSDate *date);
 
 /**
  @abstract Model a form using an object.

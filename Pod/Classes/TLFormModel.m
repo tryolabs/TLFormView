@@ -65,6 +65,10 @@ TLFormImage * TLFormImageValue (NSObject *urlOrImage) {
     }
 }
 
+@implementation TLFormDateTime : NSDate @end
+TLFormDateTime * TLFormDateTimeValue (NSDate *date) {
+    return (TLFormDateTime *) [date copy];
+}
 
 
 typedef enum {
@@ -77,7 +81,8 @@ typedef enum {
     TLFormValueTypeBoolean,
     TLFormValueTypeEnumerated,
     TLFormValueTypeList,
-    TLFormValueTypeImage
+    TLFormValueTypeImage,
+    TLFormValueTypeDateTime
 } TLFormValueType;
 
 
@@ -86,7 +91,6 @@ typedef enum {
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, readonly) Class fieldClass;
-@property (nonatomic, readonly) TLFormFieldInputType inputType;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) TLFormValueType valueType;
 
@@ -136,7 +140,8 @@ typedef enum {
                         @"TLFormBoolean",
                         @"TLFormEnumerated",
                         @"TLFormList",
-                        @"TLFormImage"] indexOfObject:stringType];
+                        @"TLFormImage",
+                        @"TLFormDateTime"] indexOfObject:stringType];
     
     if (idx != NSNotFound)
         return (TLFormValueType) idx + 1;
@@ -147,8 +152,6 @@ typedef enum {
 - (void)setupFieldInfo {
     
     //Map the value types to field and input types to define de behaviour of each type of value
-    
-    _inputType = TLFormFieldInputTypeDefault;
     
     switch (self.valueType) {
             
@@ -169,18 +172,15 @@ typedef enum {
             break;
             
         case TLFormValueTypeNumber:
-            _inputType = TLFormFieldInputTypeNumeric;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldNumeric class];
             break;
         
         case TLFormValueTypeBoolean:
-            _inputType = TLFormFieldInputTypeInlineYesNo;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldYesNo class];
             break;
         
         case TLFormValueTypeEnumerated:
-            _inputType = TLFormFieldInputTypeInlineSelect;
-            _fieldClass = [TLFormFieldSingleLine class];
+            _fieldClass = [TLFormFieldSelect class];
             break;
         
         case TLFormValueTypeList:
@@ -189,6 +189,10 @@ typedef enum {
         
         case TLFormValueTypeImage:
             _fieldClass = [TLFormFieldImage class];
+            break;
+        
+        case TLFormValueTypeDateTime:
+            _fieldClass = [TLFormFieldDateTime class];
             break;
             
         default:
@@ -277,11 +281,9 @@ typedef enum {
     TLFormField *field = [fieldInfo.fieldClass formFieldWithName:fieldName title:fieldInfo.title andDefaultValue:value];
     
     //Set the properties specific for the single line field class
-    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSingleLine class]]) {
+    if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldSelect class]]) {
         
-        TLFormFieldSingleLine *singleLineField = (TLFormFieldSingleLine *) field;
-        
-        singleLineField.inputType = fieldInfo.inputType;
+        TLFormFieldSelect *singleLineField = (TLFormFieldSelect *) field;
         singleLineField.choicesValues = choices;
         
     } else if ([fieldInfo.fieldClass isSubclassOfClass:[TLFormFieldList class]]) {

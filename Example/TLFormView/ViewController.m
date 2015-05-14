@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "TLFormView.h"
 #import "TLFormModel.h"
+#import "TLFormFieldDateTime.h"
 #import <MobileCoreServices/UTCoreTypes.h>
 
 
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) TLFormNumber *age;
 @property (nonatomic, strong) TLFormBoolean *is_active;
 @property (nonatomic, strong) TLFormEnumerated *hobbies;
+@property (nonatomic, strong) TLFormDateTime *birthday;
 @property (nonatomic, strong) TLFormSeparator *separator;
 @property (nonatomic, strong) TLFormLongText *_description;
 @property (nonatomic, strong) TLFormList *friends;
@@ -39,6 +41,13 @@
     //The "hobbies" field will be visible only when the user "is active"
     else if ([fieldName isEqualToString:@"hobbies"])
         field.visibilityPredicate = [NSPredicate predicateWithFormat:@"$is_active.value == YES"];
+    
+    //Set the date field format
+    else if ([fieldName isEqualToString:@"birthday"]) {
+        TLFormFieldDateTime *birthdayField = (TLFormFieldDateTime *) field;
+        birthdayField.dateFormat = @"MMMM dd, yyyy";
+        birthdayField.pickerMode = UIDatePickerModeDate;
+    }
     
     //Set all the borders when we are running on iPad
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
@@ -88,7 +97,10 @@
              @"H:|-[_description]-|",
              
              @"V:[_description]-[friends]-|",
-             @"H:|-[friends]-|",
+             @"H:|-[friends]",
+             
+             @"V:[_description]-[birthday(>=44)]",
+             @"H:|-[friends(==birthday)]-[birthday(==friends)]-|"
         ];
     }
 }
@@ -138,6 +150,7 @@
     
     NSURL *url = [NSURL URLWithString:@"https://s-media-cache-ak0.pinimg.com/custom_covers/216x146/413557246971119139_1385652535.jpg"];
     user.avatar = TLFormImageValue(url);
+    user.birthday = TLFormDateTimeValue([NSDate date]);
 }
 
 #pragma mark - Bar Buttons Actions
