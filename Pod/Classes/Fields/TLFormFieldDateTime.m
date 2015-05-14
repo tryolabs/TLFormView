@@ -12,54 +12,68 @@
 
 
 @implementation TLFormFieldDateTime {
+    dispatch_once_t _onceTokenFormatter;
     NSDateFormatter *_formatter;
+    UIDatePicker *picker;
 }
 
 - (NSDateFormatter *)formatter {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    dispatch_once(&_onceTokenFormatter, ^{
         _formatter = [[NSDateFormatter alloc] init];
-        
+        _formatter.dateStyle = NSDateFormatterMediumStyle;
     });
     return _formatter;
 }
 
-- (void)setupField:(BOOL)editing {
-    [super setupField:editing];
+- (void)setupFieldForEditing {
+    picker = [[UIDatePicker alloc] init];
+    picker.datePickerMode = UIDatePickerModeTime;
+    picker.translatesAutoresizingMaskIntoConstraints = NO;
+    [picker addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
+    [self addSubview:picker];
     
-    NSDictionary *metrics = [self defaultMetrics];
     UIView *titleView = [self titleView];
-    [self addSubview:titleView];
+    NSDictionary *views = NSDictionaryOfVariableBindings(picker, titleView);
     
-    if (editing) {
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-np-[titleView][picker]-np-|"
+                                                                 options:0
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-bp-[titleView]-bp-|"
+                                                                 options:0
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+}
+
+//Get and Set value
+
+- (void)setValue:(id)fieldValue {
+    
+    if (!fieldValue)
+        return;
+    
+    if ([fieldValue isKindOfClass:[NSDate class]]) {
         
-        UILabel *titleLabel = (UILabel *) [titleView viewWithTag:TLFormFieldTitleLabelTag];
-        titleLabel.textColor = [UIColor grayColor];
+        if (picker)
+            picker.date = fieldValue;
+        else
+            self.valueViewText = [[self formatter] stringFromDate:fieldValue];
         
-        UIDatePicker *picker = [[UIDatePicker alloc] init];
-        picker.datePickerMode = UIDatePickerModeDateAndTime;
-        picker.translatesAutoresizingMaskIntoConstraints = NO;
-        picker.date = [self getValue];
-        [self addSubview:picker];
-        
-        NSDictionary *views = NSDictionaryOfVariableBindings(picker, titleView);
-        
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-np-[titleView][picker]-np-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-bp-[titleView]-bp-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-    } else {
-        
-        UILabel *dateLabel = [[UILabel alloc] init];
-        dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        dateLabel.text = [[self formatter] stringFromDate:[self getValue]];
-        
-        
-    }
+    } else
+        [NSException raise:@"Invalid field value" format:@"TLFormFieldNumeric only accept fields of type NSNumber. Suplied value: %@", fieldValue];
+}
+
+- (id)getValue {
+    if (picker) 
+        return picker.date;
+    else
+        return [[self formatter] dateFromString:self.valueViewText];
+}
+
+//UIDatePicker value change
+
+- (void)controlValueChange {
+    [self.formDelegate didChangeValueForField:self newValue:[self getValue]];
 }
 
 @end

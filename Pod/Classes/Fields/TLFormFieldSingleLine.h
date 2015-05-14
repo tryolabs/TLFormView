@@ -16,7 +16,9 @@
 
 @interface TLFormFieldSingleLine (Protected)
 
+@property (nonatomic, assign) NSString *valueViewText;
 @property (nonatomic, readonly) UITextField *textField;
+
 - (void)setupFieldForEditing;
 
 @end

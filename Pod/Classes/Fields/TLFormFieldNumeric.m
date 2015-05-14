@@ -30,13 +30,24 @@
     if ([fieldValue isKindOfClass:[NSNumber class]]) {
         NSNumber *value = (NSNumber *) fieldValue;
         numberType = [value numberType];
-        self.textField.text = [value stringValue];
+        NSString *stringValue = [value stringValue];
+        
+        if (self.textField)
+            self.textField.text = stringValue;
+        else
+            self.valueViewText = stringValue;
     } else
         [NSException raise:@"Invalid field value" format:@"TLFormFieldNumeric only accept fields of type NSNumber. Suplied value: %@", fieldValue];
 }
 
 - (id)getValue {
-    NSString *stringValue = self.textField.text;
+    NSString *stringValue;
+    
+    if (self.textField)
+        stringValue = self.textField.text;
+    else
+        stringValue = self.valueViewText;
+        
     return [NSNumber numberOfType:numberType withValue:stringValue];
 }
 

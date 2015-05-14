@@ -58,7 +58,7 @@
         if (yesNoSelect)
             yesNoSelect.on = [value boolValue];
         else
-            self.textField.text = [value boolValue] ? @"Yes" : @"No";
+            self.valueViewText = [value boolValue] ? @"Yes" : @"No";
         
     } else
         [NSException raise:@"Invalid field value" format:@"TLFormFieldYesNo only accept fields of type NSNumber (boolean). Suplied value: %@", fieldValue];
@@ -68,7 +68,7 @@
     if (yesNoSelect)
         return @(yesNoSelect.on);
     else
-        return @([self.textField.text boolValue]);
+        return @([self.valueViewText boolValue]);
 }
 
 //UISwitch value change

@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Bruno Berisso. All rights reserved.
 //
 
-#import "TLFormField.h"
+#import "TLFormFieldSingleLine.h"
 
-@interface TLFormFieldDateTime : TLFormField
+@interface TLFormFieldDateTime : TLFormFieldSingleLine
 
 @end

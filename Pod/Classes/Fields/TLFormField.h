@@ -13,7 +13,7 @@ typedef enum {
     TLFormFieldBorderNone   = 0,
     TLFormFieldBorderTop    = 1 << 0,
     TLFormFieldBorderRight  = 1 << 1,
-    TLFormFieldBorderBottom  = 1 << 2,
+    TLFormFieldBorderBottom = 1 << 2,
     TLFormFieldBorderLeft   = 1 << 3,
     TLFormFieldBorderAll    = 255
 } TLFormFieldBorder;

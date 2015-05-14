@@ -61,7 +61,7 @@
                 }
             }
         } else
-            self.textField.text = stringValue;
+            self.valueViewText = stringValue;
         
     } else
         [NSException raise:@"Invalid field value" format:@"TLFormFieldSelect only accept fields of type NSString. Suplied value: %@", fieldValue];
@@ -71,7 +71,7 @@
     if (segmented)
         return [segmented titleForSegmentAtIndex:segmented.selectedSegmentIndex];
     else
-        return self.textField.text;
+        return self.valueViewText;
 }
 
 //UISegmented value change
