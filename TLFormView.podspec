@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "TLFormView"
-  s.version          = "0.0.4"
+  s.version          = "0.0.5"
   s.summary          = "An universal iOS form"
   s.homepage         = "https://github.com/tryolabs/TLFormView"
   s.license          = 'MIT'
