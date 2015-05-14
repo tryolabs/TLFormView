@@ -10,4 +10,7 @@
 
 @interface TLFormFieldDateTime : TLFormFieldSingleLine
 
+@property (nonatomic, strong) NSString *dateFormat;
+@property (nonatomic, assign) UIDatePickerMode pickerMode;
+
 @end

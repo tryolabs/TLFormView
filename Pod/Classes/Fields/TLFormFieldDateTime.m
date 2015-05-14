@@ -17,20 +17,29 @@
     UIDatePicker *picker;
 }
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.dateFormat = @"MMM dd, yyyy HH:mm";
+        self.pickerMode = UIDatePickerModeDateAndTime;
+    }
+    return self;
+}
+
 - (NSDateFormatter *)formatter {
     dispatch_once(&_onceTokenFormatter, ^{
         _formatter = [[NSDateFormatter alloc] init];
-        _formatter.dateStyle = NSDateFormatterMediumStyle;
+        _formatter.dateFormat = self.dateFormat;
     });
     return _formatter;
 }
 
 - (void)setupFieldForEditing {
     picker = [[UIDatePicker alloc] init];
-    picker.datePickerMode = UIDatePickerModeTime;
+    picker.datePickerMode = self.pickerMode;
     picker.translatesAutoresizingMaskIntoConstraints = NO;
     [picker addTarget:self action:@selector(controlValueChange) forControlEvents:UIControlEventValueChanged];
     [self addSubview:picker];
+    self.clipsToBounds = YES;
     
     UIView *titleView = [self titleView];
     NSDictionary *views = NSDictionaryOfVariableBindings(picker, titleView);
@@ -40,6 +49,10 @@
                                                                  metrics:self.defaultMetrics
                                                                    views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-bp-[titleView]-bp-|"
+                                                                 options:0
+                                                                 metrics:self.defaultMetrics
+                                                                   views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-np-[picker]-np-|"
                                                                  options:0
                                                                  metrics:self.defaultMetrics
                                                                    views:views]];
