@@ -296,7 +296,6 @@ Or clone the repo and check the code under `Pod/Classes`.
 
 There are many things that need improvement, here are some:
 
-- [ ] TLFormDate support
 - [ ] Centralised style using the methods on ``TLFormField+UIAppearance.h``
 - [ ] Expose the ‘defaultMetrics’ as part of the style
 - [ ] TLFormModel: look a better way to make objects mutations more efficient
