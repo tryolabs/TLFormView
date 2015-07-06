@@ -8,6 +8,63 @@ TLFormView is _yet another_ form view *truly* universal. This means that the sam
 
 Because it doesn't extend ``UITableView`` you are completely free to create anything to use as a form field as long as it extends the base ``TLFormField`` class. It also has some nice features like: conditional visibility using ``NSPredicate``, in-place help for each field with ``UIPopoverControler`` and on-the-fly edit/read-only modes switch among other things.
 
+There is a serie of blog posts called: _TLFormView: the form of the future_ [part I] and [part II] at the [Tryolabs Blog].
+
+#### Quick Example
+
+```objective-c
+
+//Declare your data model as an extension of TLFormModel
+
+@interface UserModel : TLFormModel
+
+@property (nonatomic, strong) TLFormImage *avatar;
+@property (nonatomic, strong) TLFormText *user_name;
+@property (nonatomic, strong) TLFormNumber *age;
+
+@end
+
+@implementation UserModel @end
+
+...
+
+@implementation SomeViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    FormUserModel *formUserModel = [FormUserModel new];
+    
+    //This copy the values of our user model to the form model constructing the correct types using plain C functions
+    formUserModel.avatar = TLFormImage(userModel.avatar);
+    formUserModel.user_name = TLFormText(userModel.userName);
+    formUserModel.age = TLFormNumber(userModel.age);
+    
+    //'form' is an instance of TLFormView.
+    [self.form setFormModel:formUserModel];
+    self.form.editing = YES;
+}
+
+...
+
+- (void)saveAction:(id)sender {
+    //Read the values entered by the user and save it to disc.
+    NSDictionary values = @{
+                            @"avatar": formUserModel.avatar,
+                            @"user_name": formUserModel.user_name,
+                            @"age": formUserModel.age
+                        }
+    [values writeToURL:[self saveUrl] atomically:YES];
+}
+
+```
+
+This is how it will look:
+
+<p align="center">
+  <img src="https://github.com/tryolabs/TLFormView/raw/master/Screenshots/iphone_quick_ex.png" style="max-width:100%;"/>
+</p>
+
 ## Usage
 
 #### Form Setup
@@ -315,3 +372,6 @@ TLFormView is available under the MIT license. See the LICENSE file for more inf
 
 [Auto Layout Visual Format]: https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html#//apple_ref/doc/uid/TP40010853-CH3-SW11
 [NSPredicate variable substitution]: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
+[part I]: http://blog.tryolabs.com/2015/05/14/tlformview-the-form-of-the-future-is-here-part-i/
+[part II]: http://blog.tryolabs.com/2015/05/20/tlformview-the-form-of-the-future-is-here-part-ii/
+[Tryolabs Blog]: http://blog.tryolabs.com/
