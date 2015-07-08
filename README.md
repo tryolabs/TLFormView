@@ -67,7 +67,14 @@ This is how it will look:
 
 ## Usage
 
-#### Form Setup
+There are two ways to setup ``TLFormView``:
+
+- The short one showed in the example above. Using [TLFormModel](#form-setup) class is simple and easy but is less flexible if you are planning to use it _as is_.
+- And the long one. Is more powerfull and give you full control over how the form will behave in his life cicle (e.g., when update the fields, who the values are formated, etc).
+
+Eventualy you can start using ``TLFormModel`` and extend your sublcass overiding the right methods to gain the level of control that the _long way_ gives you. I first will talk about the traditional setup to also explain how ``TLFormView`` works and then I will discuss ``TLFormModel`` in more detail.
+
+#### Form Setup: the long way
 
 There is two basic components: ``TLFormView`` and ``TLFormField``. ``TLFormView`` inherit from UIScrollView and add another data source and delegate to create and handle events form the form. You need to implement three methods of the ``TLFormViewDataSource`` protocol to get the form functional, these are:
 
@@ -211,7 +218,7 @@ And this is how it looks when the icon is taped:
   <img src="https://github.com/tryolabs/TLFormView/raw/master/Screenshots/in-place_help.png" style="max-width:100%;"/>
 </p>
 
-##### TLFormModel
+#### TLFormModel: the short way
 
 To help you with the setup of the form there is a class ``TLFormModel`` that do what we just did automatically inferring the implementation of the ``TLFormViewDataSource`` form his own taxonomy. You only need to extend it and add one property for each field you want to show in the form. The types of the properties must be one of the types declared in the file TLFormModel.h. Each type corresponds to one of the standard ``TLFormField`` provided.
 
