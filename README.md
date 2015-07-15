@@ -70,9 +70,9 @@ This is how it will look:
 There are two ways to setup ``TLFormView``:
 
 - The short one showed in the example above. Using [TLFormModel](#form-setup) class is simple and easy but is less flexible if you are planning to use it _as is_.
-- And the long one. Is more powerfull and give you full control over how the form will behave in his life cicle (e.g., when update the fields, who the values are formated, etc).
+- And the long one. Is more powerfull and give you full control over how the form will behave in his life cycle (e.g., when update the fields, who the values are formated, etc).
 
-Eventualy you can start using ``TLFormModel`` and extend your sublcass overiding the right methods to gain the level of control that the _long way_ gives you. I first will talk about the traditional setup to also explain how ``TLFormView`` works and then I will discuss ``TLFormModel`` in more detail.
+Eventualy you can start using ``TLFormModel`` and extend your sublcass overriding the right methods to gain the level of control that the _long way_ gives you. I first will talk about the traditional setup to also explain how ``TLFormView`` works and then I will discuss ``TLFormModel`` in more detail.
 
 #### Form Setup: the long way
 
